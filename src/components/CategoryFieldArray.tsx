@@ -9,6 +9,7 @@ import { MdDelete } from "react-icons/md";
 const CategoryFieldArray: React.FC<CategoryFieldArrayProps> = ({
   control,
   register,
+  getValues,
 }) => {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -30,7 +31,7 @@ const CategoryFieldArray: React.FC<CategoryFieldArrayProps> = ({
   return (
     <div className="flex flex-col gap-x-4 gap-y-2">
       {fields.map((category, index) => (
-        <AccordionItem key={index} title={`Category - ${index + 1}`}>
+        <AccordionItem key={category.id} title={`Variant - ${index + 1}`}>
           <div className=" relative font-sm px-4 rounded-lg">
             <div
               key={category.id}
@@ -76,7 +77,7 @@ const CategoryFieldArray: React.FC<CategoryFieldArrayProps> = ({
                     required: "Image is required",
                   })}
                   className="w-full p-2 border rounded-md"
-                />
+                />          
               </div>
 
               {/* Nested Sizes */}
@@ -96,16 +97,12 @@ const CategoryFieldArray: React.FC<CategoryFieldArrayProps> = ({
         type="button"
         onClick={() =>
           append({
-            name: "",
-            images: null,
-            gender: "3",
-            slug: "",
-            sizeMrp: [{ size: "", mrp: "" }],
+            ...getValues(`varients.${fields.length - 1}`),
           })
         }
         className=" w-fit bg-green-500  text-white p-1 px-2 cursor-pointer rounded-md hover:bg-green-600"
       >
-        Add Category
+        Add Variant
       </button>
     </div>
   );

@@ -1,4 +1,9 @@
-import { Control, UseFormGetValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import {
+  Control,
+  UseFormGetValues,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
 
 interface Size {
   size: string;
@@ -15,16 +20,38 @@ interface Category {
 
 interface IMasterProduct {
   name: string;
-  brandName: string;
+  brand: string;
   categoryId: string;
   varients: Category[];
 }
 
 interface CategoryFieldArrayProps {
-    control: Control<IMasterProduct>;
-    register: UseFormRegister<IMasterProduct>;
-    setValue: UseFormSetValue<IMasterProduct>;
-    getValues: UseFormGetValues<IMasterProduct>;
-  }
+  control: Control<IMasterProduct>;
+  register: UseFormRegister<IMasterProduct>;
+  setValue: UseFormSetValue<IMasterProduct>;
+  getValues: UseFormGetValues<IMasterProduct>;
+}
 
-export type { Size, Category, IMasterProduct, CategoryFieldArrayProps };
+interface ICategoryServer {
+  id: string;
+  name: string;
+  images: string[];
+  slug: string;
+  gender: string;
+  sizeMrp: Size[];
+}
+
+interface IMasterProductServer {
+  name: string;
+  brand: string;
+  categoryId: string;
+  varients: ICategoryServer[];
+}
+
+export type {
+  Size,
+  Category,
+  IMasterProduct,
+  CategoryFieldArrayProps,
+  IMasterProductServer,
+};

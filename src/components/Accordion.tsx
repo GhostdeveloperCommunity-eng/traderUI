@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { useState } from "react";
 
 const Accordion = ({ children }: { children: React.ReactNode }) => {
@@ -7,15 +8,17 @@ const Accordion = ({ children }: { children: React.ReactNode }) => {
 const AccordionItem = ({
   title,
   children,
+  className
 }: {
   title: string;
   children: React.ReactNode;
+  className?: string
 }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="border rounded-lg">
+    <div className= { clsx ("border rounded-lg", className)} >
       <button
-        className="w-full text-left px-4 py-2 bg-gray-100 font-medium rounded-lg flex justify-between items-center"
+        className= "w-full text-left px-4 py-2 bg-gray-100 font-medium rounded-lg flex justify-between items-center"
         onClick={(e) => {
           setIsOpen(!isOpen);
           e.preventDefault();

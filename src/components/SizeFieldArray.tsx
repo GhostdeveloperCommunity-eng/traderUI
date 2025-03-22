@@ -18,7 +18,6 @@ const SizeFieldArray: React.FC<SizeFieldArrayProps> = ({
     control,
     name: `varients.${nestIndex}.sizeMrp` as const,
   });
-  console.log({ fields }, "sizess");
 
   return (
     <div className="mt-4 p-3 flex flex-col gap-y-2 rounded-lg bg-white shadow-sm">

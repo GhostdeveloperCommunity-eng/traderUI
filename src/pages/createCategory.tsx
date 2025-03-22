@@ -100,18 +100,9 @@ export const CreateCategory = () => {
 
                 <input
                   type="text"
-                  placeholder="Category Desc"
-                  {...register(`categories.${index}.description`, {
-                    required: "Description is required",
-                  })}
-                  className="w-full p-2 border rounded"
-                />
-
-                <input
-                  type="text"
-                  placeholder="Category Type"
+                  placeholder="Subcategory"
                   {...register(`categories.${index}.subCategory`, {
-                    required: "Type is required",
+                    required: " Subcategory is required",
                   })}
                   className="w-full p-2 border rounded"
                 />

@@ -7,7 +7,7 @@ import { httpClient } from "../services/ApiService";
 
 const defaultValues: IMasterProduct = {
   name: "",
-  brandName: "",
+  brand: "",
   categoryId: "",
   varients: [
     {
@@ -22,12 +22,13 @@ const defaultValues: IMasterProduct = {
 
 export function CreateMasterProduct() {
   const [categories, setCategories] = useState<
-    { _id: string; name: string; type: string }[]
+    { _id: string; name: string; subCategory: string }[]
   >([]);
   const {
     control,
     register,
     handleSubmit,
+    reset,
     getValues,
     setValue,
     formState: { errors },
@@ -45,7 +46,6 @@ export function CreateMasterProduct() {
     try {
       const response = await httpClient.post(uploadUrl, formData);
       const data = await response.json();
-      console.log(data);
       return data.data?.[0] || null;
     } catch (error) {
       console.error("Image upload failed:", error);
@@ -54,7 +54,7 @@ export function CreateMasterProduct() {
   };
 
   const onSubmit = async (data: IMasterProduct) => {
-    console.log("data", data);
+    const productName = getValues("name");
 
     const { varients } = data;
     const clonedVariants = window.structuredClone(varients);
@@ -62,25 +62,26 @@ export function CreateMasterProduct() {
     await Promise.all(
       clonedVariants.map(async (variant, index) => {
         if (variant.images?.length) {
-          console.log("Uploading image for variant:", index);
           const imageUrl = await uploadImage(variant.images[0]);
-          console.log("Uploaded image URL:", imageUrl);
           if (imageUrl) {
             clonedVariants[index].images = [imageUrl];
           }
+        }
+        if (!getValues(`varients.${index}.name`)) {
+          setValue(`varients.${index}.name`, productName);
+          clonedVariants[index].name = productName;
         }
       })
     );
 
     data.varients = clonedVariants;
-    console.log({ clonedVariants }, { data });
-
     try {
       const master = await httpClient.post(
         getCompleteUrlV1("products/master_product"),
         data
       );
       console.log("Master product response:", await master.json());
+      reset({ ...defaultValues });
     } catch (error) {
       console.error("Error submitting data:", error);
     }
@@ -115,7 +116,7 @@ export function CreateMasterProduct() {
               <option value="">Select Category</option>
               {categories.map((category) => (
                 <option key={category._id} value={category._id}>
-                  {category.name} - {category.type}
+                  {category.name} - {category.subCategory}
                 </option>
               ))}
             </select>
@@ -127,11 +128,11 @@ export function CreateMasterProduct() {
             <input
               type="text"
               placeholder="Brand Name"
-              {...register("brandName")}
+              {...register("brand")}
               className="w-full p-2 border rounded"
             />
-            {errors.brandName && (
-              <p className="text-red-500">{errors.brandName.message}</p>
+            {errors.brand && (
+              <p className="text-red-500">{errors.brand.message}</p>
             )}
           </div>
           <div>
