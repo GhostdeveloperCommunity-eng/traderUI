@@ -7,7 +7,6 @@ import { httpClient } from "../services/ApiService";
 
 interface Category {
   name: string;
-  subCategory: string;
   file: FileList | null;
   description: string;
 }
@@ -27,9 +26,7 @@ export const CreateCategory = () => {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      categories: [
-        { name: "", subCategory: "", file: null, description: "desc" },
-      ],
+      categories: [{ name: "", file: null, description: "" }],
     },
   });
 
@@ -44,11 +41,7 @@ export const CreateCategory = () => {
   const canAddCategory = () => {
     if (watchCategories.length === 0) return true; // Always allow the first category
     const lastCategory = watchCategories[watchCategories.length - 1];
-    return (
-      lastCategory.name.trim() !== "" &&
-      lastCategory.subCategory.trim() !== "" &&
-      lastCategory.file !== null
-    );
+    return lastCategory.name.trim() !== "" && lastCategory.file !== null;
   };
 
   const onSubmit = async (data: FormValues) => {
@@ -94,15 +87,6 @@ export const CreateCategory = () => {
                   placeholder="Category Name"
                   {...register(`categories.${index}.name`, {
                     required: "Name is required",
-                  })}
-                  className="w-full p-2 border rounded"
-                />
-
-                <input
-                  type="text"
-                  placeholder="Subcategory"
-                  {...register(`categories.${index}.subCategory`, {
-                    required: " Subcategory is required",
                   })}
                   className="w-full p-2 border rounded"
                 />
@@ -153,9 +137,7 @@ export const CreateCategory = () => {
 
         <Button
           type="button"
-          onClick={() =>
-            append({ name: "", subCategory: "", file: null, description: "" })
-          }
+          onClick={() => append({ name: "", file: null, description: "" })}
           disabled={!canAddCategory()} // Disable if last category is incomplete
           className="bg-green-500 disabled:bg-gray-400"
         >

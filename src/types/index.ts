@@ -22,7 +22,12 @@ interface IMasterProduct {
   name: string;
   brand: string;
   categoryId: string;
-  varients: Category[];
+  skuCode: string;
+  subCategory: string;
+  productSubCategory: string;
+  mrp: string;
+  size: string;
+  images: File[] | null;
 }
 
 interface CategoryFieldArrayProps {

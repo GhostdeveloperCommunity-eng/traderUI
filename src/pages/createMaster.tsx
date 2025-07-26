@@ -1,23 +1,20 @@
 import { useForm } from "react-hook-form";
-import CategoryFieldArray from "../components/CategoryFieldArray";
 import { useEffect, useState } from "react";
 import { getCompleteUrlV1 } from "../utils";
 import { IMasterProduct } from "../types";
 import { httpClient } from "../services/ApiService";
+import { FormError } from "../components/FormError";
 
 const defaultValues: IMasterProduct = {
   name: "",
   brand: "",
   categoryId: "",
-  varients: [
-    {
-      name: "",
-      images: null,
-      slug: "",
-      gender: "3",
-      sizeMrp: [{ size: "", mrp: "" }],
-    },
-  ],
+  skuCode: "",
+  mrp: "",
+  productSubCategory: "",
+  size: "",
+  subCategory: "",
+  images: null,
 };
 
 export function CreateMasterProduct() {
@@ -25,12 +22,9 @@ export function CreateMasterProduct() {
     { _id: string; name: string; subCategory: string }[]
   >([]);
   const {
-    control,
     register,
     handleSubmit,
     reset,
-    getValues,
-    setValue,
     formState: { errors },
   } = useForm<IMasterProduct>({
     defaultValues,
@@ -54,31 +48,19 @@ export function CreateMasterProduct() {
   };
 
   const onSubmit = async (data: IMasterProduct) => {
-    const productName = getValues("name");
-
-    const { varients } = data;
-    const clonedVariants = window.structuredClone(varients);
-
-    await Promise.all(
-      clonedVariants.map(async (variant, index) => {
-        if (variant.images?.length) {
-          const imageUrl = await uploadImage(variant.images[0]);
-          if (imageUrl) {
-            clonedVariants[index].images = [imageUrl];
-          }
-        }
-        if (!getValues(`varients.${index}.name`)) {
-          setValue(`varients.${index}.name`, productName);
-          clonedVariants[index].name = productName;
-        }
-      })
-    );
-
-    data.varients = clonedVariants;
+    const { images } = data;
+    let imageUrl = "";
+    if (images?.length) {
+      imageUrl = await uploadImage(images[0]);
+    }
+    console.log(data);
     try {
       const master = await httpClient.post(
         getCompleteUrlV1("products/master_product"),
-        data
+        {
+          ...data,
+          images: [imageUrl],
+        }
       );
       console.log("Master product response:", await master.json());
       reset({ ...defaultValues });
@@ -99,63 +81,108 @@ export function CreateMasterProduct() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center mt-12">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-8 bg-white shadow-md rounded-lg p-6 w-full max-w-6xl"
       >
         <h1 className="text-2xl font-semibold  text-gray-800">
-          Product Variants
+          Master Product
         </h1>
-        <div className="grid grid-cols-3 gap-x-4 gap-y-2">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
           <div>
             <select
               {...register("categoryId", { required: "Category is required" })}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
             >
               <option value="">Select Category</option>
               {categories.map((category) => (
                 <option key={category._id} value={category._id}>
-                  {category.name} - {category.subCategory}
+                  {category.name}
                 </option>
               ))}
             </select>
-            {errors.categoryId && (
-              <p className="text-red-500">{errors.categoryId.message}</p>
-            )}
+            <FormError errorText={errors.categoryId?.message} />
+          </div>
+
+          <div>
+            <input
+              type="text"
+              placeholder="Product Name"
+              {...register("name", { required: "Product Name is required" })}
+              className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
+            />
+            <FormError errorText={errors.name?.message} />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Sku Code"
+              {...register("skuCode", { required: "SkuCode is required" })}
+              className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
+            />
+            <FormError errorText={errors.skuCode?.message} />
+          </div>
+          <div>
+            <input
+              type="file"
+              accept="image/*"
+              {...register(`images`, {
+                required: "Image is required",
+              })}
+              className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
+            />
+
+            <FormError errorText={errors.images?.message} />
           </div>
           <div>
             <input
               type="text"
               placeholder="Brand Name"
               {...register("brand")}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
             />
-            {errors.brand && (
-              <p className="text-red-500">{errors.brand.message}</p>
-            )}
           </div>
           <div>
             <input
               type="text"
-              placeholder="Product Name"
-              {...register("name", { required: "Product Name is required" })}
-              className="w-full p-2 border rounded"
+              placeholder="Subcategory"
+              {...register("subCategory")}
+              className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
             />
-            {errors.name && (
-              <p className="text-red-500">{errors.name.message}</p>
-            )}
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Product Subcategory"
+              {...register("productSubCategory")}
+              className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600 focus:outline-none focus:border-teal-600"
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Size"
+              {...register("size")}
+              className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
+            />
+          </div>
+          <div>
+            <input
+              type="number"
+              placeholder="Mrp"
+              {...register("mrp")}
+              className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
+            />
           </div>
         </div>
 
-        <CategoryFieldArray {...{ control, register, getValues, setValue }} />
-
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-between pt-4 border-t border-gray-100">
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            className="bg-teal-500 text-white px-4 py-2 font-semibold rounded hover:bg-teal-600 min-w-xs mx-auto cursor-pointer"
           >
-            Submit
+            Add +
           </button>
         </div>
       </form>
