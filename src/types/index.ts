@@ -37,13 +37,17 @@ interface CategoryFieldArrayProps {
   getValues: UseFormGetValues<IMasterProduct>;
 }
 
-interface ICategoryServer {
-  id: string;
+export interface ICategoryServer {
+  _id: string;
   name: string;
-  images: string[];
-  slug: string;
-  gender: string;
-  sizeMrp: Size[];
+  media: string[];
+  brand: string;
+  skuCode: string;
+  active: boolean;
+  size: string;
+  categoryName: string;
+  categoryId: string;
+  categoryDetails: {[key:string]: any}
 }
 
 interface IMasterProductServer {

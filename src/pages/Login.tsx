@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { getCompleteUrlV1 } from "../utils";
 
 const LoginPage = () => {
-
   const [input, setInput] = useState("");
   const [otp, setOtp] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -30,19 +29,19 @@ const LoginPage = () => {
           formattedInput = `+91-${input}`;
         }
 
-        fetch(getCompleteUrlV1("users/login/login_verify_otp"), {
+        fetch(getCompleteUrlV1("auth/login"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ identity: formattedInput, otp }),
+          body: JSON.stringify({ email: formattedInput, otp: Number(otp) }),
         })
           .then((response) => response.json())
           .then((data) => {
-            if (data.data.token) {
+            if (data.token) {
               localStorage.setItem(
                 "user",
                 JSON.stringify({
-                  token: data.data.token,
-                  user: data.data.user,
+                  token: data.token,
+                  user: data.user,
                 })
               );
               navigate("/create-master");
@@ -50,7 +49,6 @@ const LoginPage = () => {
               alert("Login Failed");
             }
 
-            console.log(data);
           });
       } else {
         alert("Please enter a valid 6-digit OTP");

@@ -33,7 +33,7 @@ export function CreateMasterProduct() {
   const uploadImage = async (file: File) => {
     if (!file) return null;
 
-    const uploadUrl = getCompleteUrlV1("categories/upload_Image");
+    const uploadUrl = getCompleteUrlV1("feature/upload-image");
     const formData = new FormData();
     formData.append("image", file);
 
@@ -56,10 +56,10 @@ export function CreateMasterProduct() {
     console.log(data);
     try {
       const master = await httpClient.post(
-        getCompleteUrlV1("products/master_product"),
+        getCompleteUrlV1("master"),
         {
           ...data,
-          images: [imageUrl],
+          media: [imageUrl],
         }
       );
       console.log("Master product response:", await master.json());
@@ -71,7 +71,9 @@ export function CreateMasterProduct() {
 
   useEffect(() => {
     httpClient
-      .get(getCompleteUrlV1("categories"))
+      .get(
+        getCompleteUrlV1("category"),
+      )
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data?.data)) {
