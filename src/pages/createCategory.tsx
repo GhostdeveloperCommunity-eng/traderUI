@@ -1,13 +1,14 @@
 import { useForm } from "react-hook-form";
 import { Card } from "../components/Card";
 import { Button } from "../components/Button";
-import { getCompleteUrlV1 } from "../utils";
+import { getCompleteUrlV1, uploadImage } from "../utils";
 import { httpClient } from "../services/ApiService";
 
 interface FormValues {
   name: string;
   // file: FileList | null;
   description?: string;
+  images: File[] | null;
 }
 
 export const CreateCategory = () => {
@@ -15,6 +16,7 @@ export const CreateCategory = () => {
     defaultValues: {
       name: "",
       description: "",
+      images: null,
     },
   });
 
@@ -34,10 +36,16 @@ export const CreateCategory = () => {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const response = await httpClient.post(
-        getCompleteUrlV1("category"),
-        data
-      );
+      const { images, ...restDetails } = data;
+      let imageUrl = "";
+      if (images?.length) {
+        imageUrl = await uploadImage(images[0]);
+      }
+      console.log(data);
+      const response = await httpClient.post(getCompleteUrlV1("category"), {
+        ...restDetails,
+        media: [imageUrl],
+      });
 
       if (response.ok) {
         console.log("Categories submitted successfully!");
@@ -68,7 +76,16 @@ export const CreateCategory = () => {
           {...register(`description`)}
           className="w-full p-2 border rounded"
         />
-
+        <div>
+          <input
+            type="file"
+            accept="image/*"
+            {...register(`images`, {
+              required: "Image is required",
+            })}
+            className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
+          />
+        </div>
         {/* <Button
           type="button"
           onClick={() => append({ name: "", file: null, description: "" })}

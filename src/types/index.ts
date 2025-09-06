@@ -47,7 +47,7 @@ export interface ICategoryServer {
   size: string;
   categoryName: string;
   categoryId: string;
-  categoryDetails: {[key:string]: any}
+  categoryDetails: { [key: string]: any };
 }
 
 interface IMasterProductServer {
@@ -57,10 +57,45 @@ interface IMasterProductServer {
   varients: ICategoryServer[];
 }
 
+interface ILotProduct {
+  _id: string;
+  name: string;
+  media: string[];
+  lot: Lot[];
+  status: string;
+  tags: string[];
+  isFeatured: boolean;
+  minPrice: number;
+  maxPrice: number;
+  masterId: string;
+  categoryId: string;
+  createdAt_EP: number;
+  updatedAt_EP: number;
+  expiry: string; // ISO date string
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  __v: number;
+}
+
+interface Lot {
+  quantity: number;
+  price: number;
+  originalPrice: number;
+  _id: string;
+}
+
+// interface Pagination {
+//   totalCount: number;
+//   page: number;
+//   limit: number;
+//   totalPages: number;
+// }
+
 export type {
   Size,
   Category,
   IMasterProduct,
   CategoryFieldArrayProps,
   IMasterProductServer,
+  ILotProduct,
 };

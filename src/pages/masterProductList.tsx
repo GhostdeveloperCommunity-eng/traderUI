@@ -9,9 +9,7 @@ export const MasterProductList = () => {
   const [products, setProducts] = useState<ICategoryServer[]>([]);
   useEffect(() => {
     (async function getMatserProduct() {
-      const master = await httpClient.get(
-        getCompleteUrlV1("master")
-      );
+      const master = await httpClient.get(getCompleteUrlV1("master"));
       const products = await master.json();
       setProducts(products.data);
     })();
@@ -60,7 +58,15 @@ export const MasterProductList = () => {
         </tbody>
       </table>
 
-      {selectedImage && <Modal imageUrl={selectedImage} onClose={closeImage} />}
+      {selectedImage && (
+        <Modal onClose={closeImage}>
+          <img
+            src={selectedImage}
+            alt="Product"
+            className="max-w-full max-h-[60vh] object-contain rounded-lg"
+          />
+        </Modal>
+      )}
     </div>
   );
 };

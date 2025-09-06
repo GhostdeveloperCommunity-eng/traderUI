@@ -4,6 +4,7 @@ import { CreateCategory } from "./pages/createCategory";
 import { MasterProductList } from "./pages/masterProductList";
 import { LoginPage } from "./pages/Login";
 import { ProtectRoute } from "./components/ProtectRoutes";
+import { LotList } from "./pages/LotsList";
 
 const App = () => (
   <Router>
@@ -31,6 +32,14 @@ const App = () => (
           element={
             <ProtectRoute>
               <MasterProductList />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/lot-list"
+          element={
+            <ProtectRoute>
+              <LotList />
             </ProtectRoute>
           }
         />

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { getCompleteUrlV1 } from "../utils";
+import { getCompleteUrlV1, uploadImage } from "../utils";
 import { IMasterProduct } from "../types";
 import { httpClient } from "../services/ApiService";
 import { FormError } from "../components/FormError";
@@ -30,22 +30,7 @@ export function CreateMasterProduct() {
     defaultValues,
   });
 
-  const uploadImage = async (file: File) => {
-    if (!file) return null;
 
-    const uploadUrl = getCompleteUrlV1("feature/upload-image");
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await httpClient.post(uploadUrl, formData);
-      const data = await response.json();
-      return data.data?.[0] || null;
-    } catch (error) {
-      console.error("Image upload failed:", error);
-      return null;
-    }
-  };
 
   const onSubmit = async (data: IMasterProduct) => {
     const { images } = data;
