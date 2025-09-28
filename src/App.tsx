@@ -5,6 +5,7 @@ import { MasterProductList } from "./pages/masterProductList";
 import { LoginPage } from "./pages/Login";
 import { ProtectRoute } from "./components/ProtectRoutes";
 import { LotList } from "./pages/LotsList";
+import { Approvals } from "./pages/Approvals";
 
 const App = () => (
   <Router>
@@ -40,6 +41,14 @@ const App = () => (
           element={
             <ProtectRoute>
               <LotList />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/approvals"
+          element={
+            <ProtectRoute>
+              <Approvals />
             </ProtectRoute>
           }
         />

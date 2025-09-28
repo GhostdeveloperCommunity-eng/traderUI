@@ -20,6 +20,9 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
         <Link to="/lot-list" className="text-rose-600 underline">
           Lot Product List
         </Link>
+        <Link to="/approvals" className="text-rose-600 underline">
+          Approve Sellers
+        </Link>
       </nav>
       {children}
     </div>
