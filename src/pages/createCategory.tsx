@@ -44,7 +44,7 @@ export const CreateCategory = () => {
       console.log(data);
       const response = await httpClient.post(getCompleteUrlV1("category"), {
         ...restDetails,
-        media: [imageUrl],
+        media: imageUrl,
       });
 
       if (response.ok) {
