@@ -15,6 +15,7 @@ const defaultValues: IMasterProduct = {
   size: "",
   subCategory: "",
   images: null,
+  description: "",
 };
 
 export function CreateMasterProduct() {
@@ -109,6 +110,15 @@ export function CreateMasterProduct() {
               className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
             />
             <FormError errorText={errors.skuCode?.message} />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Sku Code"
+              {...register("description", { required: "description is required" })}
+              className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
+            />
+            <FormError errorText={errors.description?.message} />
           </div>
           <div>
             <input

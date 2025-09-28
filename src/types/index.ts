@@ -28,6 +28,7 @@ interface IMasterProduct {
   mrp: string;
   size: string;
   images: File[] | null;
+  description: string
 }
 
 interface CategoryFieldArrayProps {
