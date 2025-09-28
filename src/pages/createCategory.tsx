@@ -41,7 +41,9 @@ export const CreateCategory = () => {
       if (images?.length) {
         imageUrl = await uploadImage(images[0]);
       }
-      console.log(data);
+      if(!imageUrl){
+        throw("Error no media")
+      }
       const response = await httpClient.post(getCompleteUrlV1("category"), {
         ...restDetails,
         media: imageUrl,
