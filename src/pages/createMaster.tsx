@@ -114,7 +114,7 @@ export function CreateMasterProduct() {
           <div>
             <input
               type="text"
-              placeholder="Sku Code"
+              placeholder="Description..."
               {...register("description", { required: "description is required" })}
               className="w-full p-2 border border-gray-100 rounded focus:outline-none focus:border-teal-600"
             />
