@@ -15,6 +15,9 @@ const uploadImage = async (file: File) => {
   try {
     const response = await httpClient.post(uploadUrl, formData);
     const data = await response.json();
+    if(data.data?.[0] == "ERROR_IMAGE_URL"){
+      throw("Image upload failed")
+    }
     return data.data?.[0] || null;
   } catch (error) {
     console.error("Image upload failed:", error);
