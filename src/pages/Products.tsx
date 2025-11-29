@@ -3,16 +3,9 @@ import { httpClient } from "../services/ApiService";
 import { getCompleteUrlV1 } from "../utils";
 import {
   ApiResponse,
-  Product,
   ProductAdminTable,
 } from "../components/AdminTable";
 import { Status } from "../types";
-
-const initialFees = {
-  messengerFee: "",
-  connectorFee: "",
-  platformFee: "",
-};
 
 export interface IFilterType {
   page: number;

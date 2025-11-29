@@ -118,10 +118,6 @@ export const Approvals = () => {
     handleSubmit(request, requestType);
   };
 
-  const onCancel = () => {
-    resetState();
-  };
-
   const handleSellerReqAction = async (
     request: any,
     requestType: RequestType
