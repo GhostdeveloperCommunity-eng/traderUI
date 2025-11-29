@@ -1,8 +1,8 @@
 import { baseUrl } from "../constants";
 import { httpClient } from "../services/ApiService";
 
-const getCompleteUrlV1 = (pathname: string): string => {
-  return `${baseUrl}/${pathname}`;
+const getCompleteUrlV1 = (pathname: string, params: Record<string, string | number | boolean | undefined | null> = {}): string => {
+  return buildUrlWithParams(`${baseUrl}/${pathname}`, params);
 };
 
 const uploadImage = async (file: File) => {
@@ -24,5 +24,22 @@ const uploadImage = async (file: File) => {
     return null;
   }
 };
+
+export function buildUrlWithParams(
+  baseUrl: string,
+ params: Record<string, string | number | boolean | undefined | null>
+): string {
+  const searchParams = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null) {
+      searchParams.append(key, String(value));
+    }
+  }
+
+  const queryString = searchParams.toString();
+  return queryString ? `${baseUrl}?${queryString}` : baseUrl;
+}
+
 
 export { getCompleteUrlV1, uploadImage };

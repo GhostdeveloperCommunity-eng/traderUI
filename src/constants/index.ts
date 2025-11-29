@@ -1,3 +1,5 @@
+import { AdminRequestsType, RequestStatus } from "../types";
+
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const genders = [
   {
@@ -14,4 +16,15 @@ const genders = [
   },
 ];
 
-export { baseUrl, genders };
+const requestStatusOptions = [
+  { label: "Pending", value: RequestStatus.Pending },
+  { label: "Accept", value: RequestStatus.Accept },
+  { label: "Reject", value: RequestStatus.Reject },
+];
+
+const requestTypeOptions = [
+  { label: "Seller Approvals", value: AdminRequestsType.sellerOnboarding },
+  { label: "Product Approvals", value: AdminRequestsType.productApproval },
+];
+
+export { baseUrl, genders, requestStatusOptions, requestTypeOptions };

@@ -6,6 +6,8 @@ import { LoginPage } from "./pages/Login";
 import { ProtectRoute } from "./components/ProtectRoutes";
 import { LotList } from "./pages/LotsList";
 import { Approvals } from "./pages/Approvals";
+import { Products } from "./pages/Products";
+import Users from "./pages/Users";
 
 const App = () => (
   <Router>
@@ -17,6 +19,14 @@ const App = () => (
           element={
             <ProtectRoute>
               <CreateCategory />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <ProtectRoute>
+              <Users />
             </ProtectRoute>
           }
         />
@@ -49,6 +59,14 @@ const App = () => (
           element={
             <ProtectRoute>
               <Approvals />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <ProtectRoute>
+              <Products />
             </ProtectRoute>
           }
         />

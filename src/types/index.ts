@@ -28,7 +28,7 @@ interface IMasterProduct {
   mrp: string;
   size: string;
   images: File[] | null;
-  description: string
+  description: string;
 }
 
 interface CategoryFieldArrayProps {
@@ -63,12 +63,13 @@ interface ILotProduct {
   name: string;
   media: string[];
   lot: Lot[];
-  status: string;
+  status: Status;
   tags: string[];
   isFeatured: boolean;
   minPrice: number;
   maxPrice: number;
   masterId: string;
+  masterDetails: IMasterProduct;
   categoryId: string;
   createdAt_EP: number;
   updatedAt_EP: number;
@@ -100,3 +101,35 @@ export type {
   IMasterProductServer,
   ILotProduct,
 };
+
+export enum Status {
+  Pending = "pending",
+  Active = "active",
+  Inactive = "inactive",
+}
+
+export enum RequestStatus {
+  Pending = "pending",
+  Accept = "accept",
+  Reject = "reject",
+}
+
+export enum AdminRequestsType {
+  sellerOnboarding = "seller_onboarding",
+  productApproval = "product_approval",
+}
+
+export interface IUser {
+  role: string[];
+  email: string;
+  firstName: string;
+  lastName: string;
+  affiliateId?: string;
+  seller?: {
+    businessName: string;
+    address?: string;         // address1 not present in seller object, only address
+    aadhaarNumber: string;
+    gstNumber: string;
+  };
+}
+
