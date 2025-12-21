@@ -58,6 +58,15 @@ interface IMasterProductServer {
   varients: ICategoryServer[];
 }
 
+export interface ICategoryListServer {
+  _id: string;
+  name: string;
+  media: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 interface ILotProduct {
   _id: string;
   name: string;
@@ -127,9 +136,8 @@ export interface IUser {
   affiliateId?: string;
   seller?: {
     businessName: string;
-    address?: string;         // address1 not present in seller object, only address
+    address?: string; // address1 not present in seller object, only address
     aadhaarNumber: string;
     gstNumber: string;
   };
 }
-

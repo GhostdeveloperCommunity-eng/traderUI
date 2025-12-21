@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { httpClient } from "../services/ApiService";
 import { getCompleteUrlV1 } from "../utils";
-import {
-  ApiResponse,
-  ProductAdminTable,
-} from "../components/AdminTable";
+import { ApiResponse, ProductAdminTable } from "../components/AdminTable";
 import { Status } from "../types";
+import { ProductDetail } from "./ProductDetail";
+import CardSkeleton from "../components/CardSkeleton";
 
 export interface IFilterType {
   page: number;
@@ -18,6 +17,8 @@ export const Products = () => {
     page: 1,
     status: null,
   });
+  const [openDetail, setOpenDetail] = useState<boolean>(false);
+  const [productData, setProductData] = useState<any>({});
 
   useEffect(() => {
     (async function getMatserProduct() {
@@ -38,17 +39,27 @@ export const Products = () => {
 
   return (
     <div>
-      {response !== null ? (
-        <ProductAdminTable
-          response={response}
-          filters={filters}
-          onPageChange={(num) => {
-            setFilters({ ...filters, page: num });
-          }}
-          onStatusFilterSelect={(filters) => setFilters(filters)}
-        />
+      {openDetail ? (
+        <ProductDetail product={productData} />
       ) : (
-        <p>Loading....</p>
+        <>
+          {response !== null ? (
+            <ProductAdminTable
+              response={response}
+              filters={filters}
+              onPageChange={(num) => {
+                setFilters({ ...filters, page: num });
+              }}
+              onStatusFilterSelect={(filters) => setFilters(filters)}
+            />
+          ) : (
+            <div className="p-4">
+              <div className="bg-white shadow-md rounded-lg overflow-hidden p-4">
+                <CardSkeleton />
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

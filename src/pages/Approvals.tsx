@@ -7,6 +7,8 @@ import { requestStatusOptions, requestTypeOptions } from "../constants";
 import SellerOnboardingCard from "../components/SellerOnboarding";
 import ProductApprovalCard from "../components/ProductApproval";
 import { Modal } from "../components/ImageModal";
+import CardSkeleton from "../components/CardSkeleton";
+import Breadcrumb from "../components/Breadcrumb";
 
 interface Seller {
   businessName: string;
@@ -137,79 +139,85 @@ export const Approvals = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex mb-2 items-center">
-        <h2 className="text-lg flex flex-1 font-semibold text-gray-700">
-          Approval Requests
-        </h2>
-        <div className="flex gap-8">
-          <SelectField<AdminRequestsType>
-            options={requestTypeOptions}
-            value={filters.type}
-            onChange={(value) =>
-              setFilters({
-                ...filters,
-                type: value,
-              })
-            }
-            placeholder="Select status"
-          />
-          <SelectField<RequestStatus>
-            options={requestStatusOptions}
-            value={filters.status}
-            onChange={(value) =>
-              setFilters({
-                ...filters,
-                status: value,
-              })
-            }
-            placeholder="Select status"
-          />
+    <div className="p-4">
+      <div className="bg-white shadow-md rounded-lg overflow-hidden p-4">
+        <Breadcrumb
+          items={[
+            { label: "Dashboard", to: "/users" },
+            { label: "Approvals", to: "/approvals" },
+          ]}
+        />
+        <div className="flex mb-2 items-center">
+          <h2 className="text-lg flex flex-1 font-semibold text-gray-700">
+            Approval Requests
+          </h2>
+          <div className="flex gap-8">
+            <SelectField<AdminRequestsType>
+              options={requestTypeOptions}
+              value={filters.type}
+              onChange={(value) =>
+                setFilters({
+                  ...filters,
+                  type: value,
+                })
+              }
+              placeholder="Select status"
+            />
+            <SelectField<RequestStatus>
+              options={requestStatusOptions}
+              value={filters.status}
+              onChange={(value) =>
+                setFilters({
+                  ...filters,
+                  status: value,
+                })
+              }
+              placeholder="Select status"
+            />
+          </div>
         </div>
-      </div>
 
-      {loading && (
-        <div className="text-sm text-gray-500">Loading requests...</div>
-      )}
-      {requests.length === 0 && !loading ? (
-        <p className="text-sm text-gray-500">No pending requests</p>
-      ) : (
-        <div className="space-y-3">
-          {requests.map((req) => {
-            if (req.type == "seller_onboarding") {
-              return (
-                <SellerOnboardingCard
-                  req={req}
-                  handleAction={handleSellerReqAction}
-                />
-              );
-            } else if (req.type == "product_approval") {
-              return (
-                <ProductApprovalCard
-                  req={req}
-                  handleAction={(value, type) => {
-                    setSelectedRequest(value);
-                    setActionType(type);
-                  }}
-                />
-              );
-            }
-          })}
-        </div>
-      )}
-      {Boolean(selectedRequest?._id) &&
-        selectedRequest.type == "product_approval" && (
-          <ProductApprovalModal
-            fees={fees}
-            setFees={setFees}
-            selectedRequest={selectedRequest}
-            error={error}
-            handleSubmit={handleSubmit}
-            onModalClose={onModalClose}
-            key={"productApproval"}
-            actionType={actionType}
-          />
+        {loading && <CardSkeleton />}
+        {requests.length === 0 && !loading ? (
+          <p className="text-sm text-gray-500">No pending requests</p>
+        ) : (
+          <div className="space-y-3">
+            {requests.map((req) => {
+              if (req.type == "seller_onboarding") {
+                return (
+                  <SellerOnboardingCard
+                    req={req}
+                    handleAction={handleSellerReqAction}
+                  />
+                );
+              } else if (req.type == "product_approval") {
+                return (
+                  <ProductApprovalCard
+                    req={req}
+                    handleAction={(value, type) => {
+                      setSelectedRequest(value);
+                      setActionType(type);
+                    }}
+                  />
+                );
+              }
+            })}
+          </div>
         )}
+        {Boolean(selectedRequest?._id) &&
+          selectedRequest.type == "product_approval" && (
+            <ProductApprovalModal
+              fees={fees}
+              setFees={setFees}
+              selectedRequest={selectedRequest}
+              error={error}
+              handleSubmit={handleSubmit}
+              onModalClose={onModalClose}
+              key={"productApproval"}
+              actionType={actionType}
+            />
+          )}
+      </div>
     </div>
   );
 };
