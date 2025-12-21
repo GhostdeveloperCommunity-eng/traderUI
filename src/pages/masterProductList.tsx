@@ -6,7 +6,6 @@ import { Button } from "../components/Button";
 import { Modal } from "../components/ImageModal";
 import { CreateMasterProductModal } from "../components/CreateMasterProductModal";
 import DebounceSearch from "../components/DebounceSearch";
-import Loader from "../components/Loader";
 import Breadcrumb from "../components/Breadcrumb";
 import CardSkeleton from "../components/CardSkeleton";
 
