@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-import { FaChevronDown } from "react-icons/fa";
+import React from "react";
 import { Status } from "../types";
 import { IFilterType } from "../pages/Products";
-import { Button } from "./Button";
-import { useNavigate } from "react-router-dom";
 import Breadcrumb from "./Breadcrumb";
 import moment from "moment";
-import StatusTag from "./StatusTag";
+import StatusTag from "../utils/StatusTag";
+import { Button } from "./Button";
 
 // Reusable paginated table for admin dashboard
 // Usage: <ProductAdminTable response={apiResponse} onPageChange={(p)=>{/* fetch new page */}} />
@@ -67,6 +65,15 @@ export type ApiResponse = {
   pagination: Pagination;
 };
 
+interface ProductAdminTableProps {
+  response: ApiResponse;
+  filters: IFilterType;
+  onPageChange: (page: number) => void;
+  onStatusFilterSelect: (filters: IFilterType) => void;
+  setOpenDetail: (value: boolean) => void;
+  setProductData: (data: any) => void;
+}
+
 const PaginationControl: React.FC<{
   pagination: Pagination;
   onPageChange: (page: number) => void;
@@ -104,12 +111,9 @@ export function ProductAdminTable({
   filters,
   onPageChange,
   onStatusFilterSelect,
-}: {
-  response: ApiResponse;
-  filters: IFilterType;
-  onPageChange: (page: number) => void;
-  onStatusFilterSelect: (filters: IFilterType) => void;
-}) {
+  setProductData,
+  setOpenDetail,
+}: ProductAdminTableProps) {
   const products = response?.data || [];
   const pagination = response?.pagination || {
     totalCount: 0,
@@ -198,6 +202,7 @@ export function ProductAdminTable({
               <th className="py-3 px-6 text-center">Max Discount</th>
               <th className="py-3 px-6 text-center">Date</th>
               <th className="py-3 px-6 text-center">Status</th>
+              <th className="py-3 px-6 text-center">Detail</th>
             </tr>
           </thead>
 
@@ -218,7 +223,17 @@ export function ProductAdminTable({
                 <td className="py-3 px-6 text-center">
                   <StatusTag status={p.status} />
                 </td>
-                <td className="py-2 px-2 text-center"></td>
+                <td className="py-2 px-2 text-center">
+                  <Button
+                    onClick={() => {
+                      setProductData(p);
+                      setOpenDetail(true);
+                    }}
+                    color="view"
+                  >
+                    View
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>

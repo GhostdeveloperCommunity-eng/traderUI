@@ -44,11 +44,10 @@ const LoginPage = () => {
                   user: data.user,
                 })
               );
-              navigate("/create-master");
+              navigate("/master-product-list");
             } else {
               alert("Login Failed");
             }
-
           });
       } else {
         alert("Please enter a valid 6-digit OTP");

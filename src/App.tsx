@@ -7,8 +7,10 @@ import { Approvals } from "./pages/Approvals";
 import { Products } from "./pages/Products";
 import Users from "./pages/Users";
 import { CategoryList } from "./pages/CategoryList";
-import { ProductDetail } from "./pages/ProductDetail";
+// import { ProductDetail } from "./pages/ProductDetail";
 import { OrderList } from "./pages/OrderList";
+import { Banner } from "./pages/Banner";
+import { OrderDetail } from "./pages/OrderDetail";
 
 const App = () => (
   <Router>
@@ -33,15 +35,6 @@ const App = () => (
             </ProtectRoute>
           }
         />
-
-        {/* <Route
-          path="/create-master"
-          element={
-            <ProtectRoute>
-              <CreateMasterProduct />
-            </ProtectRoute>
-          }
-        /> */}
 
         <Route
           path="/master-product-list"
@@ -84,6 +77,22 @@ const App = () => (
           element={
             <ProtectRoute>
               <OrderList />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/orders/:id"
+          element={
+            <ProtectRoute>
+              <OrderDetail />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/banners"
+          element={
+            <ProtectRoute>
+              <Banner />
             </ProtectRoute>
           }
         />

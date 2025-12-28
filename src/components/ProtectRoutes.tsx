@@ -8,6 +8,7 @@ import {
   FaThLarge,
   FaCube,
   FaUsers,
+  FaImage,
 } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
 import { FaShop } from "react-icons/fa6";
@@ -39,6 +40,7 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
     { path: "/products", label: "Products", icon: <FaCube /> },
 
     { path: "/orders", label: "Orders", icon: <FaShop /> },
+    { path: "/banners", label: "Banners", icon: <FaImage /> },
   ];
 
   return (

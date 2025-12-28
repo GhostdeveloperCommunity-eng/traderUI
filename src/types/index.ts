@@ -67,6 +67,11 @@ export interface ICategoryListServer {
   updatedAt: string;
   __v: number;
 }
+export interface IBannerList {
+  _id: string;
+  contentType: string;
+  media: string;
+}
 interface ILotProduct {
   _id: string;
   name: string;
@@ -131,13 +136,65 @@ export enum AdminRequestsType {
 export interface IUser {
   role: string[];
   email: string;
+  phoneNumber: string;
   firstName: string;
   lastName: string;
   affiliateId?: string;
+  createdAt: string;
   seller?: {
     businessName: string;
     address?: string; // address1 not present in seller object, only address
     aadhaarNumber: string;
     gstNumber: string;
   };
+}
+
+export interface OrderItem {
+  _id: string;
+  quantity: number;
+  totalAmount: number;
+  brand?: string;
+  promoterCommission?: number;
+  media?: string[];
+}
+
+export interface Address {
+  name?: string;
+  phone?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  isActive: boolean;
+}
+
+export interface Order {
+  _id: string;
+  numericOrderId: number;
+  createdAt: string;
+  totalAmount: number;
+  totalMrpWithQuantity: number;
+  totalDiscountPercentage: number;
+  totalDiscountWithQuantity?: number;
+  paymentMethod: number;
+  status: number;
+  order_items: OrderItem[];
+  address?: Address;
+  statusChangeLogs: OrderStatusHistory[];
+}
+
+export interface OrderStatusHistory {
+  changedBy: string;
+  oldStatus: number | string;
+  newStatus: number;
+  reason: string;
+  timestamp: string;
+}
+
+export interface Pagination {
+  totalCount: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }

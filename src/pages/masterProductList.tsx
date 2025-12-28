@@ -96,7 +96,7 @@ export const MasterProductList = () => {
                       <td className="py-3 px-6 text-left">{size}</td>
                       <td className="py-2 px-2 text-center">
                         <Button
-                          className="bg-blue-500 text-white px-3 py-[6px] rounded hover:bg-blue-600"
+                          className="inline-block bg-purple-500 text-purple-100 px-3 py-1 rounded-md hover:bg-purple-400 transition"
                           onClick={() =>
                             media && media.length && openImage(media[0])
                           }
