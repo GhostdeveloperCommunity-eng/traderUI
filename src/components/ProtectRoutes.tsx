@@ -5,7 +5,6 @@ import {
   FaList,
   FaClipboardCheck,
   FaTags,
-  FaThLarge,
   FaCube,
   FaUsers,
   FaImage,
