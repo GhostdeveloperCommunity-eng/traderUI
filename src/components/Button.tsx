@@ -4,7 +4,7 @@ type ButtonProps = {
   children: React.ReactNode;
   className?: string;
   disabled?: boolean;
-  color?: "primary" | "success" | "danger" | "gray";
+  color?: "primary" | "success" | "danger" | "gray" | "view";
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const colorClasses = {
@@ -12,7 +12,8 @@ const colorClasses = {
   success: "bg-green-500 hover:bg-green-600",
   danger: "bg-red-500 hover:bg-red-600",
   gray: "bg-gray-400 hover:bg-gray-500",
- };
+  view: "bg-purple-700 text-purple-700 hover:bg-purple-500",
+};
 
 const Button = ({
   children,

@@ -51,6 +51,8 @@ export const Products = () => {
                 setFilters({ ...filters, page: num });
               }}
               onStatusFilterSelect={(filters) => setFilters(filters)}
+              setOpenDetail={setOpenDetail}
+              setProductData={setProductData}
             />
           ) : (
             <div className="p-4">

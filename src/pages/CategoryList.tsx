@@ -7,7 +7,6 @@ import CreateCategory from "../components/CreateCategory";
 import moment from "moment";
 import { Modal } from "../components/ImageModal";
 import { ICategoryListServer } from "../types";
-import Loader from "../components/Loader";
 import Breadcrumb from "../components/Breadcrumb";
 import CardSkeleton from "../components/CardSkeleton";
 
@@ -65,7 +64,7 @@ export const CategoryList = () => {
             </tr>
           </thead>
           {isloading ? (
-            <div>
+            <div className="w-full">
               <CardSkeleton />
             </div>
           ) : (
@@ -84,8 +83,8 @@ export const CategoryList = () => {
                       </td>
                       <td className="py-2 px-2 text-center">
                         <Button
-                          className="bg-blue-500 text-white px-3 py-[6px] rounded hover:bg-blue-600"
-                          onClick={() => media && openImage(media)}
+                          className="inline-block bg-purple-500 text-purple-100 px-3 py-1 rounded-md hover:bg-purple-400 transition"
+                          onClick={() => media?.length && openImage(media)}
                         >
                           View
                         </Button>

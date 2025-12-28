@@ -4,12 +4,16 @@
   padding: 2rem;
   text-align: center;
 }
+html,
+body {
+  overflow-x: hidden;
+}
 
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
-  
+
   transition: filter 300ms;
 }
 .logo:hover {

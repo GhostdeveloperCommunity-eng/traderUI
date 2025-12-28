@@ -4,6 +4,7 @@ import { getCompleteUrlV1 } from "../utils";
 import { IUser } from "../types";
 import { useSearchParams } from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
+import moment from "moment";
 
 const Users = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -29,6 +30,8 @@ const Users = () => {
       firstName: u.firstName,
       lastName: u.lastName,
       affiliateId: u.affiliateId,
+      phoneNumber: u.phoneNumber,
+      createdAt: u.createdAt,
       seller: u.seller
         ? {
             businessName: u.seller.businessName,
@@ -63,8 +66,8 @@ const Users = () => {
   };
 
   return (
-    <div className="p-4">
-      <div className="bg-white shadow-md rounded-lg overflow-hidden p-4">
+    <div className="p-2">
+      <div className="bg-white shadow-md rounded-lg  p-4">
         <Breadcrumb
           items={[
             { label: "Dashboard", to: "/users" },
@@ -93,15 +96,21 @@ const Users = () => {
         </div>
 
         {/* Table inside scroll container */}
-        <div className="overflow-scroll rounded-lg shadow-md">
-          <table className="min-w-full text-sm font-light border-collapse">
-            <thead className="bg-violet-800 text-white">
+        <div className="w-full">
+          <table className="table-auto text-sm font-light border-collapse">
+            <thead className="bg-violet-800 text-white sticky top-0 z-10">
               <tr>
                 <th className="px-3 py-2 text-left font-semibold min-w-32">
                   Name
                 </th>
                 <th className="px-3 py-2 text-left font-semibold min-w-32">
                   Email
+                </th>
+                <th className="px-3 py-2 text-left font-semibold min-w-32">
+                  Phone Number
+                </th>
+                <th className="px-3 py-2 text-left font-semibold min-w-32">
+                  Register Date
                 </th>
                 <th className="px-3 py-2 text-left font-semibold min-w-32">
                   Role
@@ -129,6 +138,11 @@ const Users = () => {
                     {u.firstName + (u.lastName || "")}
                   </td>
                   <td className="px-4 py-3">{u.email}</td>
+                  <td className="px-4 py-3">{u.phoneNumber}</td>
+                  <td className="px-4 py-3">
+                    {moment(u.createdAt).format("DD MMM YYYY")}
+                  </td>
+
                   <td className="px-4 py-3">{u.role?.join(", ")}</td>
                   <td className="px-4 py-3">{u.affiliateId || "-"}</td>
                   <td className="px-4 py-3">{u.seller?.businessName || "-"}</td>
