@@ -82,29 +82,18 @@ const Users = () => {
             onChange={(e) => handleSearch(e.target.value)}
             className="px-4 py-2.5 w-64 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-
           <select
             value={role}
             onChange={(e) => handleRole(e.target.value)}
             className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Roles</option>
+            <option value="user">User/Buyer</option>
             <option value="seller">Seller</option>
             <option value="promoter">Promoter</option>
             <option value="Admin">Admin</option>
           </select>
         </div>
-        <select
-          value={role}
-          onChange={(e) => handleRole(e.target.value)}
-          className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">All Roles</option>
-          <option value="user">User/Buyer</option>
-          <option value="seller">Seller</option>
-          <option value="promoter">Promoter</option>
-          <option value="Admin">Admin</option>
-        </select>
 
         {/* Table inside scroll container */}
         <div className=" md:block w-full overflow-x-auto">
@@ -158,58 +147,6 @@ const Users = () => {
           <p className="mt-4 text-[15px] text-gray-600">No users found.</p>
         )}
       </div>
-
-      {/* Table inside scroll container */}
-      <div className="overflow-scroll rounded-lg shadow-md">
-        <table className="min-w-full text-sm font-light border-collapse">
-          <thead className="bg-violet-800 text-white">
-            <tr>
-              <th className="px-3 py-2 text-left font-semibold min-w-32">
-                Name
-              </th>
-              <th className="px-3 py-2 text-left font-semibold min-w-32">
-                Email
-              </th>
-              <th className="px-3 py-2 text-left font-semibold min-w-32">
-                Role
-              </th>
-              <th className="px-3 py-2 text-left font-semibold min-w-32">
-                Affiliate ID
-              </th>
-              <th className="px-3 py-2 text-left font-semibold">
-                Seller Business
-              </th>
-              <th className="px-3 py-2 text-left font-semibold">GST No</th>
-              <th className="px-3 py-2 text-left font-semibold">Address</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {users.map((u, idx) => (
-              <tr
-                key={idx}
-                className={`transition ${
-                  idx % 2 === 0 ? "bg-slate-50" : "bg-white"
-                }`}
-              >
-                <td className="px-4 py-3">
-                  {u.firstName + (u.lastName || "")}
-                </td>
-                <td className="px-4 py-3">{u.email}</td>
-                <td className="px-4 py-3">{u.role?.join(", ")}</td>
-                <td className="px-4 py-3">{u.affiliateId || "-"}</td>
-                <td className="px-4 py-3">{u.seller?.businessName || "-"}</td>
-                <td className="px-4 py-3">{u.seller?.gstNumber || "-"}</td>
-                <td className="px-4 py-3">{u.seller?.address || "-"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {users.length === 0 && (
-        <p className="mt-4 text-[15px] text-gray-600">No users found.</p>
-      )}
     </div>
   );
 };
