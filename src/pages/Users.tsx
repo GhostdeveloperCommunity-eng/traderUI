@@ -89,6 +89,7 @@ const Users = () => {
             className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Roles</option>
+            <option value="user">User/Buyer</option>
             <option value="seller">Seller</option>
             <option value="promoter">Promoter</option>
             <option value="Admin">Admin</option>
