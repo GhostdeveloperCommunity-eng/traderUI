@@ -1,6 +1,6 @@
 import { AdminRequestsType, RequestStatus } from "../types";
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
+const baseUrl = "https://qlr7uigpd6.execute-api.ap-south-1.amazonaws.com/prod/api";
 const genders = [
   {
     name: "Unisex",

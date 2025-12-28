@@ -3,6 +3,7 @@ import { httpClient } from "../services/ApiService";
 import { getCompleteUrlV1 } from "../utils";
 import { IUser } from "../types";
 import { useSearchParams } from "react-router-dom";
+import Breadcrumb from "../components/Breadcrumb";
 
 const Users = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -62,17 +63,34 @@ const Users = () => {
   };
 
   return (
-    <div className="p-2">
-      {/* Filters */}
-      <div className="flex gap-3 mb-6">
-        <input
-          type="text"
-          placeholder="Search by name or email..."
-          value={search}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="px-4 py-2.5 w-64 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    <div className="p-4">
+      <div className="bg-white shadow-md rounded-lg overflow-hidden p-4">
+        <Breadcrumb
+          items={[
+            { label: "Dashboard", to: "/users" },
+            { label: "Users", to: "/users" },
+          ]}
         />
+        <div className="flex gap-3 mb-6">
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="px-4 py-2.5 w-64 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
+          <select
+            value={role}
+            onChange={(e) => handleRole(e.target.value)}
+            className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">All Roles</option>
+            <option value="seller">Seller</option>
+            <option value="promoter">Promoter</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
         <select
           value={role}
           onChange={(e) => handleRole(e.target.value)}

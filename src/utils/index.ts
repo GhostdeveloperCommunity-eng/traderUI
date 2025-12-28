@@ -1,7 +1,10 @@
 import { baseUrl } from "../constants";
 import { httpClient } from "../services/ApiService";
 
-const getCompleteUrlV1 = (pathname: string, params: Record<string, string | number | boolean | undefined | null> = {}): string => {
+const getCompleteUrlV1 = (
+  pathname: string,
+  params: Record<string, string | number | boolean | undefined | null> = {}
+): string => {
   return buildUrlWithParams(`${baseUrl}/${pathname}`, params);
 };
 
@@ -15,8 +18,8 @@ const uploadImage = async (file: File) => {
   try {
     const response = await httpClient.post(uploadUrl, formData);
     const data = await response.json();
-    if(data.data?.[0] == "ERROR_IMAGE_URL"){
-      throw("Image upload failed")
+    if (data.data?.[0] == "ERROR_IMAGE_URL") {
+      throw "Image upload failed";
     }
     return data.data?.[0] || null;
   } catch (error) {
@@ -27,7 +30,7 @@ const uploadImage = async (file: File) => {
 
 export function buildUrlWithParams(
   baseUrl: string,
- params: Record<string, string | number | boolean | undefined | null>
+  params: Record<string, string | number | boolean | undefined | null>
 ): string {
   const searchParams = new URLSearchParams();
 
@@ -40,6 +43,5 @@ export function buildUrlWithParams(
   const queryString = searchParams.toString();
   return queryString ? `${baseUrl}?${queryString}` : baseUrl;
 }
-
 
 export { getCompleteUrlV1, uploadImage };

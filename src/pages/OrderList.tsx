@@ -1,27 +1,28 @@
 import { useEffect, useState } from "react";
 import { getCompleteUrlV1 } from "../utils";
 import { httpClient } from "../services/ApiService";
-import { ICategoryServer } from "../types";
 import { Button } from "../components/Button";
-import { Modal } from "../components/ImageModal";
-import { CreateMasterProductModal } from "../components/CreateMasterProductModal";
 import DebounceSearch from "../components/DebounceSearch";
+import CreateCategory from "../components/CreateCategory";
+import moment from "moment";
+import { Modal } from "../components/ImageModal";
+import { ICategoryListServer } from "../types";
 import Loader from "../components/Loader";
-import Breadcrumb from "../components/Breadcrumb";
 import CardSkeleton from "../components/CardSkeleton";
 
-export const MasterProductList = () => {
-  const [products, setProducts] = useState<ICategoryServer[]>([]);
-  const [openCreateMaster, setOpenCreateMaster] = useState<boolean>(false);
-  const [filteredProducts, setFilteredProducts] = useState<ICategoryServer[]>(
-    []
-  );
+export const OrderList = () => {
+  const [products, setProducts] = useState<ICategoryListServer[]>([]);
+  const [openCategoryModal, setOpenCategoryModal] = useState<boolean>(false);
+  const [filteredProducts, setFilteredProducts] = useState<
+    ICategoryListServer[]
+  >([]);
+
   const [isloading, setIsLoading] = useState<boolean>(true);
   const [refreshList, setRefreshList] = useState<boolean>(false);
   useEffect(() => {
     (async function getMatserProduct() {
       setIsLoading(true);
-      const master = await httpClient.get(getCompleteUrlV1("master"));
+      const master = await httpClient.get(getCompleteUrlV1("category"));
       const products = await master.json();
       setProducts(products.data);
       setFilteredProducts(products.data);
@@ -37,69 +38,45 @@ export const MasterProductList = () => {
   return (
     <div className="p-4">
       <div className="bg-white shadow-md rounded-lg overflow-hidden p-4">
-        <Breadcrumb
-          items={[
-            { label: "Dashboard", to: "/users" },
-            { label: "Master Product", to: "/master-product-list" },
-          ]}
-        />
         <div className="flex items-center justify-between mb-4">
           <DebounceSearch
             products={products}
             setSearchProduct={setFilteredProducts}
-            placeholder="Search Products..."
+            placeholder="Search order..."
           />
-
-          <Button color="success" onClick={() => setOpenCreateMaster(true)}>
-            Create Product
-          </Button>
         </div>
 
         <table className="min-w-full text-sm font-light border-collapse">
           <thead className="bg-violet-800 text-white">
-            <tr className="uppercase text-sm leading-normal">
-              <th className="py-3 px-6 text-left">Product Name</th>
-              <th className="py-3 px-6 text-left">SKU Code</th>
-              <th className="py-3 px-6 text-left">Brand</th>
-              <th className="py-3 px-6 text-left">Category Name</th>
-              <th className="py-3 px-6 text-left">Size(s)</th>
+            <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+              <th className="py-3 px-6 text-left">Name</th>
+              <th className="py-3 px-6 text-left">Description</th>
+              <th className="py-3 px-6 text-left">Date</th>
               <th className="py-3 px-6 text-center">Image</th>
             </tr>
           </thead>
           {isloading ? (
-            <>
+            <div>
               <CardSkeleton />
-            </>
+            </div>
           ) : (
             <tbody className="text-gray-600 text-sm font-light">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map(
-                  ({
-                    _id,
-                    skuCode,
-                    brand,
-                    size,
-                    media,
-                    name,
-                    categoryDetails,
-                  }) => (
+                  ({ _id, name, media, description, updatedAt }) => (
                     <tr
                       key={_id}
                       className="border-b border-gray-200 hover:bg-gray-100"
                     >
                       <td className="py-3 px-6 text-left">{name}</td>
-                      <td className="py-3 px-6 text-left">{skuCode}</td>
-                      <td className="py-3 px-6 text-left">{brand}</td>
+                      <td className="py-3 px-6 text-left">{description}</td>
                       <td className="py-3 px-6 text-left">
-                        {categoryDetails?.name}
+                        {moment(updatedAt).format("DD-MM-YYYY")}
                       </td>
-                      <td className="py-3 px-6 text-left">{size}</td>
                       <td className="py-2 px-2 text-center">
                         <Button
                           className="bg-blue-500 text-white px-3 py-[6px] rounded hover:bg-blue-600"
-                          onClick={() =>
-                            media && media.length && openImage(media[0])
-                          }
+                          onClick={() => media && openImage(media)}
                         >
                           View
                         </Button>
@@ -128,10 +105,10 @@ export const MasterProductList = () => {
           />
         </Modal>
       )}
-      {openCreateMaster && (
-        <CreateMasterProductModal
-          isOpen={openCreateMaster}
-          onClose={() => setOpenCreateMaster(false)}
+      {openCategoryModal && (
+        <CreateCategory
+          isOpen={openCategoryModal}
+          onClose={() => setOpenCategoryModal(false)}
           setRefreshList={setRefreshList}
         />
       )}

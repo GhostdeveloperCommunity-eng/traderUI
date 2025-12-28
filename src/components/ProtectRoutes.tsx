@@ -10,6 +10,7 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
+import { FaShop } from "react-icons/fa6";
 
 export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem("user");
@@ -23,8 +24,8 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
   const navItems = [
     { path: "/users", label: "Users", icon: <FaUsers /> },
 
-    { path: "/create-category", label: "Create Category", icon: <FaTags /> },
-    { path: "/create-master", label: "Create Master", icon: <FaThLarge /> },
+    { path: "/category-list", label: "Category List", icon: <FaTags /> },
+    // { path: "/create-master", label: "Create Master", icon: <FaThLarge /> },
     {
       path: "/master-product-list",
       label: "Master Product List",
@@ -36,6 +37,8 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
       icon: <FaClipboardCheck />,
     },
     { path: "/products", label: "Products", icon: <FaCube /> },
+
+    { path: "/orders", label: "Orders", icon: <FaShop /> },
   ];
 
   return (
