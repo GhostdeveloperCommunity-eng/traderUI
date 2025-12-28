@@ -1,10 +1,10 @@
 import React from "react";
 import { Status } from "../types";
 import { IFilterType } from "../pages/Products";
-import { Button } from "./Button";
 import Breadcrumb from "./Breadcrumb";
 import moment from "moment";
-import StatusTag from "./StatusTag";
+import StatusTag from "../utils/StatusTag";
+import { Button } from "./Button";
 
 // Reusable paginated table for admin dashboard
 // Usage: <ProductAdminTable response={apiResponse} onPageChange={(p)=>{/* fetch new page */}} />

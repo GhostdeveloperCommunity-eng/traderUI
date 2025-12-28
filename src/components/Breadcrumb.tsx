@@ -11,7 +11,7 @@ interface BreadcrumbProps {
 
 const Breadcrumb = ({ items }: BreadcrumbProps) => {
   return (
-    <nav aria-label="Breadcrumb" className="mb-4">
+    <nav aria-label="Breadcrumb" className="mb-8">
       <ol className="flex items-center gap-1 text-sm text-gray-500">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;

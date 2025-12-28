@@ -8,9 +8,9 @@ import { Products } from "./pages/Products";
 import Users from "./pages/Users";
 import { CategoryList } from "./pages/CategoryList";
 // import { ProductDetail } from "./pages/ProductDetail";
+import { OrderList } from "./pages/OrderList";
 import { Banner } from "./pages/Banner";
 import { OrderDetail } from "./pages/OrderDetail";
-import { OrderList } from "./pages/OrderList";
 
 const App = () => (
   <Router>
@@ -35,15 +35,6 @@ const App = () => (
             </ProtectRoute>
           }
         />
-
-        {/* <Route
-          path="/create-master"
-          element={
-            <ProtectRoute>
-              <CreateMasterProduct />
-            </ProtectRoute>
-          }
-        /> */}
 
         <Route
           path="/master-product-list"
