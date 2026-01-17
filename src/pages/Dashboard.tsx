@@ -35,6 +35,8 @@ const Dashboard = () => {
   const [topUsers, setTopUsers] = useState<TopAffiliateType[]>([]);
   const [topSeller, setTopSeller] = useState<TopAffiliateType[]>([]);
   const [orderData, setOrderData] = useState<any[]>([]);
+  const [pendingSellerData, setPendingSellerData] = useState<any[]>([]);
+  const [pendingProductData, setPendingProductData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -43,47 +45,73 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const [productsRes, sellersRes, usersRes, ordersRes] =
-          await Promise.all([
-            httpClient.get(
-              getCompleteUrlV1("product/top-products", {
-                limit: "10",
-                startDate,
-                endDate,
-              }),
-            ),
-            httpClient.get(
-              getCompleteUrlV1("product/top-sellers", {
-                limit: "10",
-                startDate,
-                endDate,
-                userOrSellerFlag: 1,
-              }),
-            ),
-            httpClient.get(
-              getCompleteUrlV1("product/top-sellers", {
-                limit: "10",
-                startDate,
-                endDate,
-                userOrSellerFlag: 2,
-              }),
-            ),
-            httpClient.get(
-              getCompleteUrlV1("order", {
-                limit: "1000",
-                startDate,
-                endDate,
-              }),
-            ),
-          ]);
+        const [
+          productsRes,
+          sellersRes,
+          usersRes,
+          ordersRes,
+          pendingSellerRequestsRes,
+          pendingProductRequestsRes,
+        ] = await Promise.all([
+          httpClient.get(
+            getCompleteUrlV1("product/top-products", {
+              limit: "10",
+              startDate,
+              endDate,
+            }),
+          ),
+          httpClient.get(
+            getCompleteUrlV1("product/top-sellers", {
+              limit: "10",
+              startDate,
+              endDate,
+              userOrSellerFlag: 1,
+            }),
+          ),
+          httpClient.get(
+            getCompleteUrlV1("product/top-sellers", {
+              limit: "10",
+              startDate,
+              endDate,
+              userOrSellerFlag: 2,
+            }),
+          ),
+          httpClient.get(
+            getCompleteUrlV1("order", {
+              limit: "1000",
+              startDate,
+              endDate,
+            }),
+          ),
+          httpClient.get(
+            getCompleteUrlV1("request/admin-requests", {
+              status: "pending",
+              type: "seller_onboarding",
+            }),
+          ),
+          httpClient.get(
+            getCompleteUrlV1("request/admin-requests", {
+              status: "pending",
+              type: "product_approval",
+            }),
+          ),
+        ]);
 
-        const [productsJson, sellersJson, usersJson, ordersJson] =
-          await Promise.all([
-            productsRes.json(),
-            sellersRes.json(),
-            usersRes.json(),
-            ordersRes.json(),
-          ]);
+        const [
+          productsJson,
+          sellersJson,
+          usersJson,
+          ordersJson,
+          pendingSellerRequestsJson,
+          pendingProductRequestsJson,
+        ] = await Promise.all([
+          productsRes.json(),
+          sellersRes.json(),
+          usersRes.json(),
+          ordersRes.json(),
+          pendingSellerRequestsRes.json(),
+          pendingProductRequestsRes.json(),
+        ]);
 
         if (!isMounted) return;
 
@@ -91,6 +119,8 @@ const Dashboard = () => {
         setTopSeller(sellersJson.data || []);
         setTopUsers(usersJson.data || []);
         setOrderData(ordersJson.data || []);
+        setPendingSellerData(pendingSellerRequestsJson.data || []);
+        setPendingProductData(pendingProductRequestsJson.data || []);
       } catch (error) {
         console.error("Dashboard API error:", error);
       } finally {
@@ -150,8 +180,11 @@ const Dashboard = () => {
         ) : (
           <>
             <TotalOrderAmount orders={orderData} />
-            <TotalPendingApproval />
-            <TotalOrderMetrics />
+            <TotalPendingApproval
+              pendingSellerData={pendingSellerData}
+              pendingProductData={pendingProductData}
+            />
+            <TotalOrderMetrics orders={orderData} />
             <TopProducts products={topProducts} />
             <TopUsers users={topUsers} />
             <TopSeller sellers={topSeller} />

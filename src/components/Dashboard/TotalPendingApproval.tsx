@@ -1,6 +1,15 @@
-type Props = {};
+type Props = {
+  pendingSellerData: any[];
+  pendingProductData: any[];
+};
 
-function TotalPendingApproval({}: Props) {
+function TotalPendingApproval({
+  pendingSellerData,
+  pendingProductData,
+}: Props) {
+  console.log("Pending Sellers:", pendingSellerData.length);
+  console.log("pendingProductData", pendingProductData.length);
+
   return (
     <>
       <div className="relative bg-white shadow-md rounded-lg p-4 flex flex-col items-center justify-center overflow-hidden">
@@ -19,7 +28,7 @@ function TotalPendingApproval({}: Props) {
                 <td className="py-2 text-left">Products</td>
                 <td className="py-2 text-right">
                   <span className="bg-violet-100 text-violet-700 px-3 py-1 rounded-full font-semibold">
-                    12
+                    {pendingProductData.length}
                   </span>
                 </td>
               </tr>
@@ -27,7 +36,7 @@ function TotalPendingApproval({}: Props) {
                 <td className="py-2 text-left">Seller</td>
                 <td className="py-2 text-right">
                   <span className="bg-violet-100 text-violet-700 px-3 py-1 rounded-full font-semibold">
-                    8
+                    {pendingSellerData.length}
                   </span>
                 </td>
               </tr>

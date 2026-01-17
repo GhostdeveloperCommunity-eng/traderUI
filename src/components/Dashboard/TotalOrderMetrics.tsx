@@ -1,6 +1,12 @@
-type Props = {};
+type Props = {
+  orders?: any[];
+};
 
-function TotalOrderMetrics({}: Props) {
+function TotalOrderMetrics({ orders }: Props) {
+  const pendingOrders = orders?.filter((item) => item.status === 0);
+  const approvedOrders = orders?.filter((item) => item.status === 1);
+
+  console.log("approvedOrders", approvedOrders);
   return (
     <>
       <div className="relative bg-white shadow-md rounded-lg p-4 flex flex-col items-center justify-center overflow-hidden">
@@ -19,7 +25,7 @@ function TotalOrderMetrics({}: Props) {
                 <td className="py-2 text-left">Total</td>
                 <td className="py-2 text-right">
                   <span className="bg-violet-100 text-violet-700 px-3 py-1 rounded-full font-semibold">
-                    12
+                    {orders?.length || 0}
                   </span>
                 </td>
               </tr>
@@ -27,15 +33,15 @@ function TotalOrderMetrics({}: Props) {
                 <td className="py-2 text-left">Pending</td>
                 <td className="py-2 text-right">
                   <span className="bg-violet-100 text-violet-700 px-3 py-1 rounded-full font-semibold">
-                    8
+                    {pendingOrders?.length || 0}
                   </span>
                 </td>
               </tr>
               <tr>
-                <td className="py-2 text-left">Delievered</td>
+                <td className="py-2 text-left">Approved</td>
                 <td className="py-2 text-right">
                   <span className="bg-violet-100 text-violet-700 px-3 py-1 rounded-full font-semibold">
-                    8
+                    {approvedOrders?.length || 0}
                   </span>
                 </td>
               </tr>

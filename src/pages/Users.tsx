@@ -96,51 +96,94 @@ const Users = () => {
         </div>
 
         {/* Table inside scroll container */}
-        <div className=" md:block w-full overflow-x-auto">
-          <table className="min-w-[1100px] w-full text-sm border-collapse">
-            <thead className="bg-violet-800 text-white sticky top-0 z-10">
-              <tr>
-                {[
-                  "Name",
-                  "Email",
-                  "Phone",
-                  "Register Date",
-                  "Role",
-                  "Affiliate ID",
-                  "Seller Business",
-                  "GST No",
-                  "Address",
-                ].map((h) => (
-                  <th key={h} className="px-3 py-2 text-left font-semibold">
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
-              {users.map((u, idx) => (
-                <tr
-                  key={idx}
-                  className={idx % 2 === 0 ? "bg-slate-50" : "bg-white"}
-                >
-                  <td className="px-3 py-2">
-                    {u.firstName} {u.lastName}
-                  </td>
-                  <td className="px-3 py-2">{u.email}</td>
-                  <td className="px-3 py-2">{u.phoneNumber}</td>
-                  <td className="px-3 py-2">
-                    {moment(u.createdAt).format("DD MMM YYYY")}
-                  </td>
-                  <td className="px-3 py-2">{u.role?.join(", ")}</td>
-                  <td className="px-3 py-2">{u.affiliateId || "-"}</td>
-                  <td className="px-3 py-2">{u.seller?.businessName || "-"}</td>
-                  <td className="px-3 py-2">{u.seller?.gstNumber || "-"}</td>
-                  <td className="px-3 py-2">{u.seller?.address || "-"}</td>
+        <div className="relative w-full max-w-full overflow-hidden">
+          {/* DESKTOP TABLE */}
+          <div className="hidden md:block w-full overflow-x-auto">
+            <table className="min-w-[1100px] w-full text-sm border-collapse">
+              <thead className="bg-violet-800 text-white sticky top-0 z-10">
+                <tr>
+                  {[
+                    "Name",
+                    "Email",
+                    "Phone",
+                    "Register Date",
+                    "Role",
+                    "Affiliate ID",
+                    "Seller Business",
+                    "GST No",
+                    "Address",
+                  ].map((h) => (
+                    <th key={h} className="px-3 py-2 text-left font-semibold">
+                      {h}
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {users.map((u, idx) => (
+                  <tr
+                    key={idx}
+                    className={idx % 2 === 0 ? "bg-slate-50" : "bg-white"}
+                  >
+                    <td className="px-3 py-2">
+                      {u.firstName} {u.lastName}
+                    </td>
+                    <td className="px-3 py-2">{u.email}</td>
+                    <td className="px-3 py-2">{u.phoneNumber}</td>
+                    <td className="px-3 py-2">
+                      {moment(u.createdAt).format("DD MMM YYYY")}
+                    </td>
+                    <td className="px-3 py-2">{u.role?.join(", ")}</td>
+                    <td className="px-3 py-2">{u.affiliateId || "-"}</td>
+                    <td className="px-3 py-2">
+                      {u.seller?.businessName || "-"}
+                    </td>
+                    <td className="px-3 py-2">{u.seller?.gstNumber || "-"}</td>
+                    <td className="px-3 py-2">{u.seller?.address || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* MOBILE GRID (NO HORIZONTAL SCROLL) */}
+          <div className="md:hidden grid grid-cols-1 gap-4">
+            {users.map((u, idx) => (
+              <div key={idx} className="bg-white rounded-lg shadow p-4 text-sm">
+                <div className="grid grid-cols-2 gap-2">
+                  <span className="font-semibold">Name</span>
+                  <span>
+                    {u.firstName} {u.lastName}
+                  </span>
+
+                  <span className="font-semibold">Email</span>
+                  <span className="truncate">{u.email}</span>
+
+                  <span className="font-semibold">Phone</span>
+                  <span>{u.phoneNumber}</span>
+
+                  <span className="font-semibold">Registered</span>
+                  <span>{moment(u.createdAt).format("DD MMM YYYY")}</span>
+
+                  <span className="font-semibold">Role</span>
+                  <span>{u.role?.join(", ")}</span>
+
+                  <span className="font-semibold">Affiliate</span>
+                  <span>{u.affiliateId || "-"}</span>
+
+                  <span className="font-semibold">Business</span>
+                  <span>{u.seller?.businessName || "-"}</span>
+
+                  <span className="font-semibold">GST</span>
+                  <span>{u.seller?.gstNumber || "-"}</span>
+
+                  <span className="font-semibold">Address</span>
+                  <span className="col-span-2">{u.seller?.address || "-"}</span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {users.length === 0 && (
