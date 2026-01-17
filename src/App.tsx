@@ -11,12 +11,22 @@ import { CategoryList } from "./pages/CategoryList";
 import { OrderList } from "./pages/OrderList";
 import { Banner } from "./pages/Banner";
 import { OrderDetail } from "./pages/OrderDetail";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => (
   <Router>
     <div className="bg-gray-50 flex flex-col gap-4 min-h-screen">
       <Routes>
         <Route path="/" element={<LoginPage />} />
+
+         <Route
+          path="/dashboard"
+          element={
+            <ProtectRoute>
+              <Dashboard />
+            </ProtectRoute>
+          }
+        />
 
         <Route
           path="/category-list"

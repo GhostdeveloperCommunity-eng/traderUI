@@ -198,3 +198,21 @@ export interface Pagination {
   limit: number;
   totalPages: number;
 }
+
+export interface ProductType {
+  _id: string;
+  totalSale: number;
+  volume: number;
+  productName: string;
+  masterId: string;
+}
+
+export type TopAffiliateType = {
+  _id: string;
+  totalSale: number;
+  fName: string;
+  lName: string;
+  businessName: string;
+  affiliateId: string;
+  volume: number;
+};

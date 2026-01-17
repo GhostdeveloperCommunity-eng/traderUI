@@ -1,4 +1,4 @@
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
   FaUserCircle,
@@ -16,6 +16,7 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem("user");
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
+  const navigate = useNavigate();
 
   if (!token) {
     return <Navigate to="/" />;
@@ -84,7 +85,12 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
       <div className="flex flex-1 flex-col">
         {/* Header */}
         <header className="flex items-center justify-between bg-white px-4 py-3">
-          <h1 className="text-lg font-bold">Admin Dashboard</h1>
+          <h1
+            onClick={() => navigate("/dashboard")}
+            className="text-lg font-bold cursor-pointer"
+          >
+            Admin Dashboard
+          </h1>
           <FaUserCircle size={28} className="text-gray-600 cursor-pointer" />
         </header>
 

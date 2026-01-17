@@ -127,7 +127,7 @@ export function ProductAdminTable({
       <div className="bg-white shadow-md rounded-lg overflow-hidden p-4">
         <Breadcrumb
           items={[
-            { label: "Dashboard", to: "/users" },
+            { label: "Dashboard", to: "/dashboard" },
             { label: "Product", to: "/products" },
           ]}
         />

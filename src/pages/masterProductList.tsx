@@ -13,7 +13,7 @@ export const MasterProductList = () => {
   const [products, setProducts] = useState<ICategoryServer[]>([]);
   const [openCreateMaster, setOpenCreateMaster] = useState<boolean>(false);
   const [filteredProducts, setFilteredProducts] = useState<ICategoryServer[]>(
-    []
+    [],
   );
   const [isloading, setIsLoading] = useState<boolean>(true);
   const [refreshList, setRefreshList] = useState<boolean>(false);
@@ -38,7 +38,7 @@ export const MasterProductList = () => {
       <div className="bg-white shadow-md rounded-lg overflow-hidden p-4">
         <Breadcrumb
           items={[
-            { label: "Dashboard", to: "/users" },
+            { label: "Dashboard", to: "/dashboard" },
             { label: "Master Product", to: "/master-product-list" },
           ]}
         />
@@ -104,7 +104,7 @@ export const MasterProductList = () => {
                         </Button>
                       </td>
                     </tr>
-                  )
+                  ),
                 )
               ) : (
                 <tr>

@@ -40,7 +40,7 @@ export const CategoryList = () => {
       <div className="bg-white shadow-md rounded-lg overflow-hidden p-4">
         <Breadcrumb
           items={[
-            { label: "Dashboard", to: "/users" },
+            { label: "Dashboard", to: "/dashboard" },
             { label: "Category", to: "/category-list" },
           ]}
         />
@@ -90,7 +90,7 @@ export const CategoryList = () => {
                         </Button>
                       </td>
                     </tr>
-                  )
+                  ),
                 )
               ) : (
                 <tr>

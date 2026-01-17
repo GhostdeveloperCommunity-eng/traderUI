@@ -40,7 +40,7 @@ export const OrderDetail = () => {
     <div className="p-4 bg-white shadow-md rounded">
       <Breadcrumb
         items={[
-          { label: "Dashboard", to: "/users" },
+          { label: "Dashboard", to: "/dashboard" },
           { label: "Order", to: "/orders" },
           { label: "Order Detail", to: "detail" },
         ]}

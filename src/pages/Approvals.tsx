@@ -97,7 +97,7 @@ export const Approvals = () => {
     setLoading(true);
     try {
       const response = await httpClient.get(
-        getCompleteUrlV1("request/admin-requests", filters)
+        getCompleteUrlV1("request/admin-requests", filters),
       );
 
       const [approvalRequests] = await Promise.all([
@@ -122,10 +122,10 @@ export const Approvals = () => {
 
   const handleSellerReqAction = async (
     request: any,
-    requestType: RequestType
+    requestType: RequestType,
   ) => {
     const userConfirmed = window.confirm(
-      `Are you sure you want to ${requestType} seller - ${request.metadata?.businessName}`
+      `Are you sure you want to ${requestType} seller - ${request.metadata?.businessName}`,
     );
     if (userConfirmed) {
       // OK CLICKED
@@ -143,7 +143,7 @@ export const Approvals = () => {
       <div className="bg-white shadow-md rounded-lg overflow-hidden p-4">
         <Breadcrumb
           items={[
-            { label: "Dashboard", to: "/users" },
+            { label: "Dashboard", to: "/dashboard" },
             { label: "Approvals", to: "/approvals" },
           ]}
         />

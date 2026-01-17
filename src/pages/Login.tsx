@@ -44,7 +44,7 @@ const LoginPage = () => {
                   user: data.user,
                 })
               );
-              navigate("/master-product-list");
+              navigate("/dashboard");
             } else {
               alert("Login Failed");
             }

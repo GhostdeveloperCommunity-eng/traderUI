@@ -70,7 +70,7 @@ const Users = () => {
       <div className="bg-white shadow-md rounded-lg  p-4">
         <Breadcrumb
           items={[
-            { label: "Dashboard", to: "/users" },
+            { label: "Dashboard", to: "/dashboard" },
             { label: "Users", to: "/users" },
           ]}
         />
