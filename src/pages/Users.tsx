@@ -5,6 +5,7 @@ import { IUser } from "../types";
 import { useSearchParams } from "react-router-dom";
 import Breadcrumb from "../components/Breadcrumb";
 import moment from "moment";
+import UserDataByRole from "./UserDataByRole";
 
 const Users = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -12,6 +13,7 @@ const Users = () => {
 
   const search = searchParams.get("search") || "";
   const role = searchParams.get("role") || "";
+  const [userRole, setUserRole] = useState<string>(role);
 
   const fetchUsers = async () => {
     const query = new URLSearchParams();
@@ -58,6 +60,7 @@ const Users = () => {
   };
 
   const handleRole = (value: string) => {
+    setUserRole(value);
     setSearchParams((prev) => {
       const p = new URLSearchParams(prev);
       p.set("role", value);
@@ -99,52 +102,7 @@ const Users = () => {
         <div className="relative w-full max-w-full overflow-hidden">
           {/* DESKTOP TABLE */}
           <div className="hidden md:block w-full overflow-x-auto">
-            <table className="min-w-[1100px] w-full text-sm border-collapse">
-              <thead className="bg-violet-800 text-white sticky top-0 z-10">
-                <tr>
-                  {[
-                    "Name",
-                    "Email",
-                    "Phone",
-                    "Register Date",
-                    "Role",
-                    "Affiliate ID",
-                    "Seller Business",
-                    "GST No",
-                    "Address",
-                  ].map((h) => (
-                    <th key={h} className="px-3 py-2 text-left font-semibold">
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-
-              <tbody>
-                {users.map((u, idx) => (
-                  <tr
-                    key={idx}
-                    className={idx % 2 === 0 ? "bg-slate-50" : "bg-white"}
-                  >
-                    <td className="px-3 py-2">
-                      {u.firstName} {u.lastName}
-                    </td>
-                    <td className="px-3 py-2">{u.email}</td>
-                    <td className="px-3 py-2">{u.phoneNumber}</td>
-                    <td className="px-3 py-2">
-                      {moment(u.createdAt).format("DD MMM YYYY")}
-                    </td>
-                    <td className="px-3 py-2">{u.role?.join(", ")}</td>
-                    <td className="px-3 py-2">{u.affiliateId || "-"}</td>
-                    <td className="px-3 py-2">
-                      {u.seller?.businessName || "-"}
-                    </td>
-                    <td className="px-3 py-2">{u.seller?.gstNumber || "-"}</td>
-                    <td className="px-3 py-2">{u.seller?.address || "-"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <UserDataByRole users={users} userRole={userRole} />
           </div>
 
           {/* MOBILE GRID (NO HORIZONTAL SCROLL) */}

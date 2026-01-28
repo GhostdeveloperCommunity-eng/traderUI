@@ -141,6 +141,7 @@ export interface IUser {
   lastName: string;
   affiliateId?: string;
   createdAt: string;
+  status: string;
   seller?: {
     businessName: string;
     address?: string; // address1 not present in seller object, only address

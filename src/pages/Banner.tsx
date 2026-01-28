@@ -45,6 +45,11 @@ export const Banner = () => {
             setSearchProduct={setFilteredProducts}
             placeholder="Search banner..."
           />
+          <div>
+            <Button color={"success"} onClick={() => setOpenBannerModal(true)}>
+              Add Banner
+            </Button>
+          </div>
         </div>
 
         {/* Table */}

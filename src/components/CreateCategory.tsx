@@ -120,7 +120,7 @@ export const CreateCategoryModal = ({
                 disabled={loader}
                 color="success"
               >
-                {loader ? "Creating..." : "Create"}
+                {loader ? "Uploading..." : "Create"}
               </Button>
             </div>
           </form>
