@@ -3,7 +3,6 @@ import { getCompleteUrlV1 } from "../utils";
 import { httpClient } from "../services/ApiService";
 import { Button } from "../components/Button";
 import DebounceSearch from "../components/DebounceSearch";
-import CreateCategory from "../components/CreateCategory";
 import { Modal } from "../components/ImageModal";
 import { IBannerList } from "../types";
 import CardSkeleton from "../components/CardSkeleton";
