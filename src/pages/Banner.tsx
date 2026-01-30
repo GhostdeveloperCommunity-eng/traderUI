@@ -7,6 +7,7 @@ import CreateCategory from "../components/CreateCategory";
 import { Modal } from "../components/ImageModal";
 import { IBannerList } from "../types";
 import CardSkeleton from "../components/CardSkeleton";
+import BannerCreateModal from "../components/BannerCreateModal";
 
 export const Banner = () => {
   const [banner, setBanner] = useState<IBannerList[]>([]);
@@ -109,9 +110,9 @@ export const Banner = () => {
         </Modal>
       )}
 
-      {/* Create Category Modal */}
+      {/* Banner Modal */}
       {openBannerModal && (
-        <CreateCategory
+        <BannerCreateModal
           isOpen={openBannerModal}
           onClose={() => setOpenBannerModal(false)}
           setRefreshList={setRefreshList}
