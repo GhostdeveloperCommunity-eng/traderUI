@@ -71,6 +71,7 @@ export interface IBannerList {
   _id: string;
   contentType: string;
   media: string;
+  contentId: string;
 }
 interface ILotProduct {
   _id: string;

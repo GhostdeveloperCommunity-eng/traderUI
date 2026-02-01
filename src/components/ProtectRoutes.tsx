@@ -17,6 +17,7 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
+  const [openMenu, setOpenMenu] = useState(false);
 
   if (!token) {
     return <Navigate to="/" />;
@@ -43,6 +44,10 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
     { path: "/banners", label: "Banners", icon: <FaImage /> },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
@@ -91,7 +96,27 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
           >
             Admin Dashboard
           </h1>
-          <FaUserCircle size={28} className="text-gray-600 cursor-pointer" />
+          <div
+            className="relative"
+            // ref={dropdownRef}
+          >
+            <FaUserCircle
+              size={28}
+              className="text-gray-600 cursor-pointer hover:text-gray-800"
+              onClick={() => setOpenMenu(!openMenu)}
+            />
+
+            {openMenu && (
+              <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow">
+                <button
+                  className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </header>
 
         {/* Content */}

@@ -3,12 +3,25 @@ import { Card } from "./Card";
 import { Button } from "./Button";
 import { getCompleteUrlV1, uploadImage } from "../utils";
 import { httpClient } from "../services/ApiService";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface FormValues {
-  name: string;
-  description?: string;
+  contentId: string;
+  contentType?: string;
   images: FileList | null;
+}
+interface Category {
+  _id: string;
+  name: string;
+}
+interface Product {
+  _id: string;
+  masterDetails: MasterDetails;
+}
+export interface MasterDetails {
+  _id: string;
+  name: string;
+  media: string[];
 }
 
 interface BannerModalProps {
@@ -22,22 +35,28 @@ export const BannerCreateModal = ({
   onClose,
   setRefreshList,
 }: BannerModalProps) => {
-  const { handleSubmit, register, reset } = useForm<FormValues>({
+  const { handleSubmit, register, reset, watch } = useForm<FormValues>({
     defaultValues: {
-      name: "",
-      description: "",
+      contentType: "",
+      contentId: "",
       images: null,
     },
   });
 
+  const selectedContentType = watch("contentType");
+
   const [loader, setLoader] = useState<boolean>(false);
+  const [categoryList, setCategoryList] = useState<Category[]>([]);
+  const [productList, setProductList] = useState<Product[]>([]);
 
   if (!isOpen) return null;
 
   const onSubmit = async (data: FormValues) => {
     try {
       setLoader(true);
-      const { images, ...restDetails } = data;
+
+      const { images, contentType, contentId } = data;
+
       let imageUrl = "";
 
       if (images?.length) {
@@ -48,24 +67,48 @@ export const BannerCreateModal = ({
         throw new Error("Image upload failed");
       }
 
-      const response = await httpClient.post(getCompleteUrlV1("banner"), {
-        ...restDetails,
+      const payload = {
+        contentId: contentId,
+        contentType: contentType,
         media: imageUrl,
-      });
+      };
+
+      const response = await httpClient.post(
+        getCompleteUrlV1("banner"),
+        payload,
+      );
 
       if (response.ok) {
         setRefreshList((prev) => !prev);
         reset();
         onClose();
-      } else {
-        console.error("Failed to submit category");
       }
     } catch (error) {
-      console.error("Error submitting category:", error);
+      console.error("Error submitting banner:", error);
     } finally {
       setLoader(false);
     }
   };
+
+  useEffect(() => {
+    (async function getMatserProduct() {
+      setLoader(true);
+      const master = await httpClient.get(getCompleteUrlV1("category"));
+      const category = await master.json();
+      setCategoryList(category.data);
+      setLoader(false);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async function getMatserProduct() {
+      setLoader(true);
+      const master = await httpClient.get(getCompleteUrlV1("product"));
+      const products = await master.json();
+      setProductList(products.data);
+      setLoader(false);
+    })();
+  }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -84,12 +127,42 @@ export const BannerCreateModal = ({
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <input
-              type="text"
-              placeholder="Select Category"
-              {...register("name", { required: true })}
+            <select
+              {...register("contentType", { required: true })}
               className="w-full p-2 border rounded"
-            />
+            >
+              <option value="">Select Content Type</option>
+              <option value="category">Category</option>
+              <option value="product">Product</option>
+            </select>
+
+            {selectedContentType === "category" && (
+              <select
+                {...register("contentId", { required: true })}
+                className="w-full p-2 border rounded"
+              >
+                <option value="">Select Category</option>
+                {categoryList.map((item) => (
+                  <option key={item._id} value={item._id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {selectedContentType === "product" && (
+              <select
+                {...register("contentId", { required: true })}
+                className="w-full p-2 border rounded"
+              >
+                <option value="">Select Product</option>
+                {productList.map((item) => (
+                  <option key={item._id} value={item._id}>
+                    {item?.masterDetails?.name}
+                  </option>
+                ))}
+              </select>
+            )}
 
             <input
               type="file"
