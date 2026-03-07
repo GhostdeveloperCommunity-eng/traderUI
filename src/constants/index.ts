@@ -1,6 +1,6 @@
 import { AdminRequestsType, RequestStatus } from "../types";
 
-const baseUrl = "https://qlr7uigpd6.execute-api.ap-south-1.amazonaws.com/prod/api";
+const baseUrl = "https://2dtiwtxflj.execute-api.ap-south-1.amazonaws.com/prod/api";
 const genders = [
   {
     name: "Unisex",
