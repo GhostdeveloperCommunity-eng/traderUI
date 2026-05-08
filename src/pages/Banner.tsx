@@ -102,7 +102,7 @@ export const Banner = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-violet-800 text-white uppercase text-sm leading-normal">
+              <tr className="bg-blue-800 text-white uppercase text-sm leading-normal">
                 <th className="py-3 px-6 text-left">Content Type</th>
                 <th className="py-3 px-6 text-left">Content Name</th>
                 <th className="py-3 px-6 text-right">Image</th>

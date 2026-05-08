@@ -13,7 +13,7 @@ function TotalPendingApproval({
   return (
     <>
       <div className="relative bg-white shadow-md rounded-lg p-4 flex flex-col items-center justify-center overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-gradient-to-br from-violet-400 to-violet-700 opacity-40">
+        <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-gradient-to-br from-blue-400 to-blue-700 opacity-40">
           <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0) 60%, rgba(255,255,255,0.25) 100%)]"></div>
           <div className="absolute inset-0 rounded-full bg-[repeating-radial-gradient(circle, rgba(255,255,255,0.0) 0, rgba(255,255,255,0.0) 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 12px)]"></div>
         </div>
@@ -27,7 +27,7 @@ function TotalPendingApproval({
               <tr>
                 <td className="py-2 text-left">Products</td>
                 <td className="py-2 text-right">
-                  <span className="bg-violet-100 text-violet-700 px-3 py-1 rounded-full font-semibold">
+                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold">
                     {pendingProductData.length}
                   </span>
                 </td>
@@ -35,7 +35,7 @@ function TotalPendingApproval({
               <tr>
                 <td className="py-2 text-left">Seller</td>
                 <td className="py-2 text-right">
-                  <span className="bg-violet-100 text-violet-700 px-3 py-1 rounded-full font-semibold">
+                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold">
                     {pendingSellerData.length}
                   </span>
                 </td>

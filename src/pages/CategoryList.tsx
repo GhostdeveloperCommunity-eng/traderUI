@@ -55,7 +55,7 @@ export const CategoryList = () => {
           </Button>
         </div>
         <table className="min-w-full text-sm font-light border-collapse">
-          <thead className="bg-violet-800 text-white">
+          <thead className="bg-blue-800 text-white">
             <tr className="uppercase text-sm leading-normal">
               <th className="py-3 px-6 text-left">Name</th>
               <th className="py-3 px-6 text-left">Description</th>

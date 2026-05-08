@@ -13,7 +13,7 @@ export default function UserDataByRole({ users, userRole }: Props) {
       return (
         <>
           <table className="min-w-[1100px] w-full text-sm border-collapse">
-            <thead className="bg-violet-800 text-white sticky top-0 z-10">
+            <thead className="bg-blue-800 text-white sticky top-0 z-10">
               <tr>
                 {[
                   "Name",
@@ -62,7 +62,7 @@ export default function UserDataByRole({ users, userRole }: Props) {
       return (
         <>
           <table className="min-w-[1100px] w-full text-sm border-collapse">
-            <thead className="bg-violet-800 text-white sticky top-0 z-10">
+            <thead className="bg-blue-800 text-white sticky top-0 z-10">
               <tr>
                 {[
                   "Name",
@@ -118,7 +118,7 @@ export default function UserDataByRole({ users, userRole }: Props) {
       return (
         <>
           <table className="min-w-[1100px] w-full text-sm border-collapse">
-            <thead className="bg-violet-800 text-white sticky top-0 z-10">
+            <thead className="bg-blue-800 text-white sticky top-0 z-10">
               <tr>
                 {[
                   "Name",
@@ -165,7 +165,7 @@ export default function UserDataByRole({ users, userRole }: Props) {
       return (
         <>
           <table className="min-w-[1100px] w-full text-sm border-collapse">
-            <thead className="bg-violet-800 text-white sticky top-0 z-10">
+            <thead className="bg-blue-800 text-white sticky top-0 z-10">
               <tr>
                 {[
                   "Name",

@@ -35,7 +35,7 @@ function SelectField<T extends string | number>({
         onChange={(e) => onChange(e.target.value as T)}
         className="
           border border-gray-200 rounded-lg pl-2 pr-6 p-1
-          focus:outline-none focus:ring-2 focus:ring-violet-500
+          focus:outline-none focus:ring-2 focus:ring-blue-500
           bg-white text-gray-600 text-sm
           appearance-none
           cursor-pointer

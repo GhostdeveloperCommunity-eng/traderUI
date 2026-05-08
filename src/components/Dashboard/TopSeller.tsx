@@ -8,13 +8,14 @@ type Props = {
 const TopSeller = ({ sellers }: Props) => {
   const navigation = useNavigate();
   return (
-    <div className="bg-white shadow-md rounded-lg max-w-full">
-      <div className="flex justify-between items-center mb-2 pt-2 px-4">
-        <h3 className="text-lg text-green-800 font-bold mb-4 text-center align-center pt-2">
+    <div className="bg-white shadow-md rounded-xl overflow-hidden border border-slate-100 transition-all hover:shadow-lg">
+      <div className="flex justify-between items-center px-5 py-4 border-b border-slate-50">
+        <h3 className="text-base text-slate-800 font-bold flex items-center gap-2">
+          <span className="w-1.5 h-6 bg-blue-600 rounded-full"></span>
           Top Sellers
         </h3>
         <button
-          className="ml-4 text-violet-800 underline cursor-pointer px-2 py-2  rounded-md hover:bg-violet-300"
+          className="text-blue-600 text-sm font-semibold hover:text-blue-700 transition-colors cursor-pointer"
           onClick={() => navigation("/users?role=seller")}
         >
           View All
@@ -23,11 +24,11 @@ const TopSeller = ({ sellers }: Props) => {
 
       <div className="overflow-x-hidden">
         <table className="w-full text-sm border-collapse whitespace-nowrap">
-          <thead className="bg-violet-800 text-white">
-            <tr className="uppercase text-xs">
-              <th className="py-3 px-4 text-left">Business Name</th>
-              <th className="py-3 px-4 text-left">Total Sale</th>
-              <th className="py-3 px-4 text-left">Volume</th>
+          <thead className="bg-blue-600 text-white font-semibold">
+            <tr className="uppercase text-[11px] tracking-wider">
+              <th className="py-4 px-5 text-left">Business Name</th>
+              <th className="py-4 px-5 text-left">Total Sale</th>
+              <th className="py-4 px-5 text-left">Volume</th>
             </tr>
           </thead>
 

@@ -6,7 +6,7 @@ const TotalOrderAmount = ({ orders }: Props) => {
   const totalAmount = orders.reduce((sum, order) => sum + order.totalAmount, 0);
   return (
     <div className="relative bg-white shadow-md rounded-lg p-4 flex flex-col items-center justify-center overflow-hidden">
-      <div className="absolute -top-10 -left-10 w-44 h-44 rounded-full bg-gradient-to-br from-violet-400 to-violet-700 opacity-40">
+      <div className="absolute -top-10 -left-10 w-44 h-44 rounded-full bg-gradient-to-br from-blue-400 to-blue-700 opacity-40">
         <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0) 60%, rgba(255,255,255,0.25) 100%)]"></div>
         <div className="absolute inset-0 rounded-full bg-[repeating-radial-gradient(circle, rgba(255,255,255,0.0) 0, rgba(255,255,255,0.0) 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 12px)]"></div>
       </div>

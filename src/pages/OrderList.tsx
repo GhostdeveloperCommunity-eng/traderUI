@@ -98,7 +98,7 @@ export const OrderList = () => {
         </div>
 
         <table className="min-w-full text-sm">
-          <thead className="bg-violet-800 text-white">
+          <thead className="bg-blue-800 text-white">
             <tr>
               <th className="py-3 px-3 text-left">Order ID</th>
               <th className="py-3 px-3 text-left">Date</th>

@@ -194,8 +194,8 @@ export function ProductAdminTable({
         </div>
 
         <table className="min-w-full text-sm font-light border-collapse">
-          <thead className="bg-violet-800 text-white">
-            <tr className="uppercase text-sm leading-normal">
+          <thead className="bg-blue-600 text-white font-semibold">
+            <tr className="uppercase text-xs tracking-wider">
               <th className="py-3 px-6 text-center">Description</th>
               <th className="py-3 px-6 text-center">Min Price</th>
               <th className="py-3 px-6 text-center">Max Price</th>

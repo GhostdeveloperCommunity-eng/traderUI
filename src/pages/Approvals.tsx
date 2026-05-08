@@ -255,7 +255,7 @@ const ProductApprovalModal = ({
               onChange={(e) =>
                 setFees({ ...fees, messengerFee: e.target.value })
               }
-              className="w-full border-1 rounded-md border-gray-200 px-3 py-2 text-sm focus:border-violet-500 outline-none"
+              className="w-full border-1 rounded-md border-gray-200 px-3 py-2 text-sm focus:border-blue-500 outline-none"
             />
             <input
               type="number"
@@ -264,7 +264,7 @@ const ProductApprovalModal = ({
               onChange={(e) =>
                 setFees({ ...fees, connectorFee: e.target.value })
               }
-              className="w-full border-1 rounded-md border-gray-200 px-3 py-2 text-sm focus:border-violet-500 outline-none"
+              className="w-full border-1 rounded-md border-gray-200 px-3 py-2 text-sm focus:border-blue-500 outline-none"
             />
             <input
               type="number"
@@ -273,14 +273,14 @@ const ProductApprovalModal = ({
               onChange={(e) =>
                 setFees({ ...fees, platformFee: e.target.value })
               }
-              className="w-full border-1 rounded-md  border-gray-200 px-3 py-2 text-sm focus:border-violet-500 outline-none"
+              className="w-full border-1 rounded-md  border-gray-200 px-3 py-2 text-sm focus:border-blue-500 outline-none"
             />
             {error && <div className="text-red-500 text-sm">{error}</div>}
           </div>
           <div className="flex justify-end gap-2 mt-4">
             <button
               onClick={() => handleSubmit(selectedRequest, "accept")}
-              className="px-4 py-2 rounded-md text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 cursor-pointer"
+              className="px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 cursor-pointer"
             >
               Submit
             </button>
