@@ -10,7 +10,7 @@ import {
   FaImage,
   FaThLarge,
 } from "react-icons/fa";
-import { FiMenu } from "react-icons/fi";
+import { FiMenu, FiLogOut } from "react-icons/fi";
 import { FaShop } from "react-icons/fa6";
 
 export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
@@ -56,108 +56,130 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
       <aside
         className={`${
           isOpen ? "w-64" : "w-20"
-        } transition-all duration-300 ease-in-out bg-[#0f172a] flex flex-col text-white shadow-2xl z-30 relative`}
+        } transition-all duration-300 ease-in-out bg-gradient-to-b from-slate-900 via-[#0b0f19] to-slate-950 flex flex-col text-white shadow-2xl z-30 relative border-r border-slate-800/40`}
       >
         {/* Sidebar Top with Toggle */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-800">
+        <div className={`flex items-center p-5 border-b border-slate-800/60 ${isOpen ? 'justify-between' : 'flex-col gap-4 justify-center'}`}>
           {isOpen ? (
             <div className="flex items-center gap-3">
-              <div className="bg-white rounded-2xl p-2 shadow-lg">
+              <div className="bg-white/95 rounded-xl p-1.5 shadow-md border border-slate-200 flex items-center justify-center">
                 <img
                   src="/lottmart-logo.png"
                   alt="Lottmart"
-                  className="h-12 w-auto object-contain"
+                  className="h-8 w-8 object-contain"
                 />
               </div>
-              <span className="font-bold text-xl tracking-tight text-white">
+              <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
                 Lottmart
               </span>
             </div>
           ) : (
-             <div className="mx-auto bg-white rounded-xl p-1.5 shadow-lg">
-                <img
-                  src="/lottmart-logo.png"
-                  alt="Lottmart"
-                  className="h-10 w-10 object-contain"
-                />
-             </div>
+            <div className="bg-white/95 rounded-xl p-1.5 shadow-md border border-slate-200 flex items-center justify-center">
+              <img
+                src="/lottmart-logo.png"
+                alt="Lottmart"
+                className="h-8 w-8 object-contain"
+              />
+            </div>
           )}
-          {isOpen && (
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-1.5 cursor-pointer rounded-lg hover:bg-slate-800 transition-colors text-slate-400 hover:text-white"
-            >
-              <FiMenu size={20} />
-            </button>
-          )}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-1.5 cursor-pointer rounded-lg hover:bg-slate-800/80 text-slate-400 hover:text-white transition-all duration-200"
+            title={isOpen ? "Collapse Sidebar" : "Expand Sidebar"}
+          >
+            <FiMenu size={18} />
+          </button>
         </div>
 
         {/* Navigation */}
         <nav className="flex flex-col gap-1.5 p-3 mt-4 overflow-y-auto overflow-x-hidden custom-scrollbar flex-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group relative ${
-                location.pathname === item.path
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
-                  : "hover:bg-slate-800/50 text-slate-400 hover:text-slate-100"
-              }`}
-            >
-              <span className={`text-xl transition-all duration-300 ${
-                location.pathname === item.path ? "scale-110" : "group-hover:scale-110"
-              }`}>
-                {item.icon}
-              </span>
-              {isOpen && (
-                <span className="font-medium whitespace-nowrap overflow-hidden text-ellipsis text-sm">
-                  {item.label}
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-200 group relative ${
+                  isActive
+                    ? "bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 text-white shadow-[0_4px_20px_rgba(59,130,246,0.25)] font-semibold"
+                    : "hover:bg-slate-800/60 text-slate-400 hover:text-slate-100"
+                }`}
+              >
+                {isActive && (
+                  <div className="absolute left-0 top-3 bottom-3 w-1 bg-blue-500 rounded-r-full" />
+                )}
+                <span className={`text-lg transition-all duration-200 ${
+                  isActive ? "scale-110 text-white" : "group-hover:scale-110 text-slate-400 group-hover:text-slate-100"
+                }`}>
+                  {item.icon}
                 </span>
-              )}
-              {!isOpen && (
-                 <div className="absolute left-16 bg-slate-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-xl border border-slate-700">
+                {isOpen && (
+                  <span className="text-sm whitespace-nowrap overflow-hidden text-ellipsis tracking-wide">
                     {item.label}
-                 </div>
-              )}
-            </Link>
-          ))}
+                  </span>
+                )}
+                {!isOpen && (
+                  <div className="absolute left-20 bg-slate-900 border border-slate-800 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-50 shadow-xl shadow-black/40">
+                    {item.label}
+                  </div>
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-4 border-t border-slate-800 bg-[#0f172a]/50 backdrop-blur-sm">
-          {!isOpen && (
-             <button
-                onClick={() => setIsOpen(true)}
-                className="mx-auto block p-2 text-slate-400 hover:text-white transition-colors"
-             >
-                <FiMenu size={20} />
-             </button>
-          )}
-          {isOpen && (
+        {isOpen ? (
+          <div className="p-4 border-t border-slate-800/60 bg-slate-950/25 flex flex-col gap-3">
+            <div className="flex items-center gap-3 px-2 py-1">
+              <div className="relative flex-shrink-0">
+                <FaUserCircle size={36} className="text-slate-400" />
+                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-950 rounded-full"></div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-slate-200 truncate">Administrator</p>
+                <p className="text-[10px] text-slate-500 font-medium truncate">Super Admin</p>
+              </div>
+            </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 w-full px-4 py-3 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200 group"
+              className="flex items-center justify-center gap-2 w-full px-4 py-2.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200 group border border-dashed border-slate-800 hover:border-red-500/20 font-medium text-xs cursor-pointer"
             >
-              <FaUserCircle size={22} className="group-hover:scale-110 transition-transform" />
-              <span className="font-medium text-sm">Sign Out</span>
+              <FiLogOut size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+              <span>Sign Out</span>
             </button>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="p-4 border-t border-slate-800/60 bg-slate-950/25 flex flex-col items-center gap-4">
+            <div className="relative group/avatar cursor-pointer">
+              <FaUserCircle size={32} className="text-slate-400" />
+              <div className="absolute bottom-0 right-0 w-2 h-2 bg-emerald-500 border border-slate-950 rounded-full"></div>
+              <div className="absolute left-14 bottom-1 bg-slate-900 border border-slate-800 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium opacity-0 group-hover/avatar:opacity-100 pointer-events-none transition-all duration-200 translate-x-2 group-hover/avatar:translate-x-0 whitespace-nowrap z-50 shadow-xl shadow-black/40">
+                Administrator (Super Admin)
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-center p-2.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200 group relative cursor-pointer"
+              title="Sign Out"
+            >
+              <FiLogOut size={20} className="group-hover:scale-110 transition-transform" />
+              <div className="absolute left-14 bg-slate-900 border border-slate-800 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-50 shadow-xl shadow-black/40">
+                Sign Out
+              </div>
+            </button>
+          </div>
+        )}
       </aside>
 
       {/* Main Section */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="flex items-center justify-between bg-white px-8 py-4 border-b border-slate-200 shadow-sm z-20">
-          <div className="flex items-center gap-5">
-            <img
-              src="/lottmart-logo.png"
-              alt="Lottmart"
-              className="h-20 w-auto object-contain"
-            />
+        <header className="flex items-center justify-between bg-white px-8 py-4 border-b border-slate-100 shadow-sm z-20">
+          <div className="flex items-center gap-3">
             <h1
               onClick={() => navigate("/dashboard")}
-              className="text-2xl font-bold text-slate-800 cursor-pointer hover:text-blue-600 transition-all flex items-center gap-2"
+              className="text-xl font-bold text-slate-800 cursor-pointer hover:text-blue-600 transition-colors"
             >
               {navItems.find((item) => location.pathname === item.path)?.label || "Overview"}
             </h1>

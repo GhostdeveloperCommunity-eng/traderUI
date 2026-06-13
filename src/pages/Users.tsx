@@ -280,7 +280,16 @@ const PremiumTable = ({ users, activeRole }: { users: IUser[]; activeRole: strin
 /* ═══════════════════════════════════════════════════
    ROLE CARDS CONFIG
    ═══════════════════════════════════════════════════ */
-const ROLE_CARDS = [
+const ROLE_CARDS: {
+  readonly key: string;
+  readonly title: string;
+  readonly icon: React.ElementType;
+  readonly gradient: string;
+  readonly iconBg: string;
+  readonly iconColor: string;
+  readonly trend?: number;
+  readonly subtitle?: string;
+}[] = [
   {
     key: "",
     title: "Total Users",
@@ -329,7 +338,7 @@ const ROLE_CARDS = [
     iconBg: "bg-slate-100",
     iconColor: "text-slate-600",
   },
-] as const;
+];
 
 /* ═══════════════════════════════════════════════════
    TOOLBAR ROLE DROPDOWN OPTIONS

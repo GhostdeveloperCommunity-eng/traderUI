@@ -47,6 +47,16 @@ class ApiService {
       headers: { ...this.getHeaders(isFormData), ...(headers || {}) },
     });
   }
+
+  async delete(
+    url: string,
+    headers?: Record<string, any>
+  ) {
+    return fetch(url, {
+      method: "DELETE",
+      headers: { ...this.getHeaders(), ...(headers || {}) },
+    });
+  }
 }
 
 export const httpClient = new ApiService();

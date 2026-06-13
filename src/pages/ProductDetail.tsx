@@ -1,11 +1,14 @@
 import moment from "moment";
 import { Button } from "../components/Button";
+import { FiArrowLeft } from "react-icons/fi";
 
 type ProductDetailProps = {
   product: any;
+  onEdit: () => void;
+  onBack: () => void;
 };
 
-export const ProductDetail = ({ product }: ProductDetailProps) => {
+export const ProductDetail = ({ product, onEdit, onBack }: ProductDetailProps) => {
   const {
     description,
     media,
@@ -29,9 +32,18 @@ export const ProductDetail = ({ product }: ProductDetailProps) => {
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800">
-          {masterDetails?.name}
-        </h1>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onBack}
+            className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-700 transition cursor-pointer flex items-center justify-center border border-transparent hover:border-slate-200 bg-white shadow-sm"
+            title="Back to Products List"
+          >
+            <FiArrowLeft size={18} />
+          </button>
+          <h1 className="text-2xl font-semibold text-gray-800">
+            {masterDetails?.name}
+          </h1>
+        </div>
         <span
           className={`px-3 py-1 rounded-full text-sm font-medium ${
             status === "active"
@@ -109,7 +121,7 @@ export const ProductDetail = ({ product }: ProductDetailProps) => {
 
           {/* Actions */}
           <div className="flex gap-3 mt-6">
-            <Button color="primary">Edit Product</Button>
+            <Button color="primary" onClick={onEdit}>Edit Product</Button>
             <Button color="danger">Deactivate</Button>
           </div>
         </div>
