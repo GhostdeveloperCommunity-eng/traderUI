@@ -9,6 +9,12 @@ import {
   FaUsers,
   FaImage,
   FaThLarge,
+  FaWallet,
+  FaExchangeAlt,
+  FaCoins,
+  FaFileInvoiceDollar,
+  FaChartBar,
+  FaSlidersH,
 } from "react-icons/fa";
 import { FiMenu, FiLogOut } from "react-icons/fi";
 import { FaShop } from "react-icons/fa6";
@@ -44,6 +50,17 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
 
     { path: "/orders", label: "Orders", icon: <FaShop /> },
     { path: "/banners", label: "Banners", icon: <FaImage /> },
+
+    // Wallet Module Header
+    { isHeader: true, label: "Wallet Module" },
+    { path: "/wallet/dashboard", label: "Wallet Dashboard", icon: <FaWallet /> },
+    { path: "/wallet/accounts", label: "Wallet Accounts", icon: <FaUserCircle /> },
+    { path: "/wallet/transactions", label: "Transactions", icon: <FaExchangeAlt /> },
+    { path: "/wallet/withdrawals", label: "Withdrawal Requests", icon: <FaCoins /> },
+    { path: "/wallet/commission-rules", label: "Commission Rules", icon: <FaFileInvoiceDollar /> },
+    { path: "/wallet/analytics", label: "Wallet Analytics", icon: <FaChartBar /> },
+    { path: "/wallet/settings", label: "Wallet Settings", icon: <FaSlidersH /> },
+    { path: "/wallet/details", label: "Wallet Details", icon: <FaUserCircle />, hideInSidebar: true },
   ];
 
   const handleLogout = () => {
@@ -93,12 +110,27 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
 
         {/* Navigation */}
         <nav className="flex flex-col gap-1.5 p-3 mt-4 overflow-y-auto overflow-x-hidden custom-scrollbar flex-1">
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.path;
+          {navItems.map((item, index) => {
+            if ("isHeader" in item && item.isHeader) {
+              return isOpen ? (
+                <div key={index} className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4 pt-5 pb-1">
+                  {item.label}
+                </div>
+              ) : (
+                <div key={index} className="border-t border-slate-800/60 my-3" />
+              );
+            }
+
+            if ("hideInSidebar" in item && item.hideInSidebar) {
+              return null;
+            }
+
+            const linkItem = item as { path: string; label: string; icon: React.ReactNode };
+            const isActive = location.pathname === linkItem.path;
             return (
               <Link
-                key={item.path}
-                to={item.path}
+                key={linkItem.path}
+                to={linkItem.path}
                 className={`flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-200 group relative ${
                   isActive
                     ? "bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 text-white shadow-[0_4px_20px_rgba(59,130,246,0.25)] font-semibold"
@@ -111,16 +143,16 @@ export const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
                 <span className={`text-lg transition-all duration-200 ${
                   isActive ? "scale-110 text-white" : "group-hover:scale-110 text-slate-400 group-hover:text-slate-100"
                 }`}>
-                  {item.icon}
+                  {linkItem.icon}
                 </span>
                 {isOpen && (
                   <span className="text-sm whitespace-nowrap overflow-hidden text-ellipsis tracking-wide">
-                    {item.label}
+                    {linkItem.label}
                   </span>
                 )}
                 {!isOpen && (
                   <div className="absolute left-20 bg-slate-900 border border-slate-800 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 translate-x-2 group-hover:translate-x-0 whitespace-nowrap z-50 shadow-xl shadow-black/40">
-                    {item.label}
+                    {linkItem.label}
                   </div>
                 )}
               </Link>

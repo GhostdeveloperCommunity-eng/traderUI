@@ -13,6 +13,16 @@ import { Banner } from "./pages/Banner";
 import { OrderDetail } from "./pages/OrderDetail";
 import Dashboard from "./pages/Dashboard";
 
+// Wallet Pages
+import { WalletDashboard } from "./pages/WalletDashboard";
+import { WalletAccounts } from "./pages/WalletAccounts";
+import { WalletDetails } from "./pages/WalletDetails";
+import { WalletTransactions } from "./pages/WalletTransactions";
+import { WalletWithdrawals } from "./pages/WalletWithdrawals";
+import { WalletCommissionRules } from "./pages/WalletCommissionRules";
+import { WalletAnalytics } from "./pages/WalletAnalytics";
+import { WalletSettings } from "./pages/WalletSettings";
+
 const App = () => (
   <Router>
     <div className="bg-gray-50 flex flex-col gap-4 min-h-screen">
@@ -103,6 +113,72 @@ const App = () => (
           element={
             <ProtectRoute>
               <Banner />
+            </ProtectRoute>
+          }
+        />
+
+        {/* Wallet Routes */}
+        <Route
+          path="/wallet/dashboard"
+          element={
+            <ProtectRoute>
+              <WalletDashboard />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/wallet/accounts"
+          element={
+            <ProtectRoute>
+              <WalletAccounts />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/wallet/details"
+          element={
+            <ProtectRoute>
+              <WalletDetails />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/wallet/transactions"
+          element={
+            <ProtectRoute>
+              <WalletTransactions />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/wallet/withdrawals"
+          element={
+            <ProtectRoute>
+              <WalletWithdrawals />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/wallet/commission-rules"
+          element={
+            <ProtectRoute>
+              <WalletCommissionRules />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/wallet/analytics"
+          element={
+            <ProtectRoute>
+              <WalletAnalytics />
+            </ProtectRoute>
+          }
+        />
+        <Route
+          path="/wallet/settings"
+          element={
+            <ProtectRoute>
+              <WalletSettings />
             </ProtectRoute>
           }
         />
