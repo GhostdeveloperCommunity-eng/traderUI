@@ -4,53 +4,113 @@ import { RequestType } from "../pages/Approvals";
 interface ProductApprovalCardProps {
   req: any;
   handleAction: (req: any, type: RequestType) => void;
+  onViewDetails: (req: any) => void;
 }
 
 export const ProductApprovalCard: React.FC<ProductApprovalCardProps> = ({
   req,
   handleAction,
+  onViewDetails,
 }) => {
-  console.log(req.type, "fsdbfjhsdb");
   if (req.type !== "product_approval") return null;
 
   const product = req?.metadata || {};
-  // if (!req?.metadata?.masterDetails) return null;
+  const master = product.masterDetails || {};
+  const mediaUrl = master.media?.[0] || "/placeholder-product.png";
+
+  const discountPercent = product.mrp && product.sellingPrice 
+    ? Math.round(((product.mrp - product.sellingPrice) / product.mrp) * 100)
+    : 0;
+
   return (
     <div
       key={req._id}
-      className="bg-white border border-gray-200 rounded-xl p-2 shadow-sm hover:shadow-md transition flex justify-between items-center"
+      className="group relative flex flex-col md:flex-row md:items-center justify-between gap-6 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition-all duration-300 hover:shadow-md hover:border-slate-300"
     >
-      <div className="flex items-center gap-4">
-        {product.masterDetails?.media?.[0] && (
+      <div className="flex flex-1 items-start gap-4">
+        {/* Left Aspect Image */}
+        <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-50 border border-slate-100/60 p-1">
           <img
-            src={product.masterDetails.media[0]}
-            alt={product.name}
-            className="w-24 h-24 "
+            src={mediaUrl}
+            alt={master.name || "Product"}
+            className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
           />
-        )}
-        <div className="text-sm text-gray-700 space-y-1">
-          <p className="text-lg text-black">{product.masterDetails?.name}</p>
-          {product?.description && <p> {product.description}</p>}
-          {product?.mrp && <p>MRP: ₹{product.mrp}</p>}
+        </div>
+
+        {/* Center Text Details */}
+        <div className="flex-1 min-w-0 space-y-2">
+          <div>
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-0.5 text-2xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-600/10">
+                {master.categoryId?.name || "Product"}
+              </span>
+              <span className="text-2xs font-mono text-slate-400">ID: {req._id.substring(12)}</span>
+            </div>
+            <h3 className="text-sm font-bold text-slate-800 tracking-tight leading-snug truncate">
+              {master.name}
+            </h3>
+          </div>
+
+          {/* Info grid of pricing, inventory details */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1.5 text-2xs text-slate-500 pt-0.5">
+            <div>
+              <span className="font-semibold text-slate-400">MRP:</span>{" "}
+              <span className="font-bold text-slate-700">₹{product.mrp || 0}</span>
+            </div>
+            <div>
+              <span className="font-semibold text-slate-400">Sell Price:</span>{" "}
+              <span className="font-bold text-slate-700">₹{product.sellingPrice || 0}</span>
+              {discountPercent > 0 && (
+                <span className="ml-1 text-indigo-600 font-bold">-{discountPercent}%</span>
+              )}
+            </div>
+            <div>
+              <span className="font-semibold text-slate-400">Lot/MOQ:</span>{" "}
+              <span className="font-bold text-slate-700">{product.lotSize || 1} / {product.moq || 1}</span>
+            </div>
+            <div>
+              <span className="font-semibold text-slate-400">Seller:</span>{" "}
+              <span className="font-bold text-slate-700 truncate inline-block max-w-[100px] align-bottom">
+                {req.firstName} {req.lastName}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {req.status === "pending" && (
+      {/* Right Actions & Badges */}
+      <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-3 border-t md:border-t-0 border-slate-100 pt-3 md:pt-0">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2 py-1 text-3xs font-semibold uppercase tracking-wider text-amber-800 border border-amber-200/50">
+          <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+          Pending
+        </span>
+
         <div className="flex gap-2">
           <button
-            onClick={() => handleAction(req, "accept")}
-            className="bg-green-500 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-green-600 transition"
+            onClick={() => onViewDetails(req)}
+            className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-2xs font-semibold text-slate-700 transition hover:bg-slate-50 cursor-pointer"
           >
-            Approve
+            Details
           </button>
-          <button
-            onClick={() => handleAction(req, "reject")}
-            className="bg-red-500 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-red-600 transition"
-          >
-            Reject
-          </button>
+          
+          {req.status === "pending" && (
+            <>
+              <button
+                onClick={() => handleAction(req, "reject")}
+                className="inline-flex items-center justify-center rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-2xs font-semibold text-rose-700 transition hover:bg-rose-100 cursor-pointer"
+              >
+                Reject
+              </button>
+              <button
+                onClick={() => handleAction(req, "accept")}
+                className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-3 py-1.5 text-2xs font-semibold text-white transition hover:bg-slate-800 cursor-pointer"
+              >
+                Approve
+              </button>
+            </>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

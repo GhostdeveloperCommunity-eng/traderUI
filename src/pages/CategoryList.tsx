@@ -252,7 +252,7 @@ export const CategoryList = () => {
             <img
               src={selectedImage}
               alt="Category Preview"
-              className="max-w-full max-h-[75vh] object-contain rounded-2xl shadow-xl mx-auto"
+              className="max-w-full max-h-[50vh] object-contain rounded-2xl shadow-xl mx-auto"
             />
           </div>
         </Modal>

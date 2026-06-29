@@ -94,34 +94,68 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
         throw new Error("Image is required to proceed.");
       }
 
-      const payload = {
-        name: data.name,
-        description: data.description,
-        media: imageUrl,
-        isActive: data.isActive,
-      };
+      const trimmedName = data.name.trim();
+      const trimmedDescription = data.description?.trim() || "";
+
+      if (!trimmedName) {
+        throw new Error("Category name is required.");
+      }
 
       let response;
       if (isEdit && editingCategory) {
+        const payload = {
+          id: editingCategory._id,
+          name: trimmedName,
+          description: trimmedDescription,
+          media: imageUrl,
+          isActive: data.isActive,
+        };
+
         response = await httpClient.put(
-          getCompleteUrlV1(`category/${editingCategory._id}`),
+          getCompleteUrlV1("category"),
           payload
         );
+
+        const resText = await response.text();
+
+        if (response.ok) {
+          setRefreshList((prev) => !prev);
+          reset();
+          onClose();
+        } else {
+          let errorMessage = "Failed to save category. Please try again.";
+          try {
+            const errJson = JSON.parse(resText);
+            errorMessage = errJson.message || errJson.error || errJson.data?.message || errorMessage;
+          } catch (_) {}
+          setGeneralError(errorMessage);
+        }
       } else {
+        const payload = {
+          name: trimmedName,
+          description: trimmedDescription,
+          media: imageUrl,
+          isActive: data.isActive,
+        };
+
         response = await httpClient.post(
           getCompleteUrlV1("category"),
           payload
         );
-      }
 
-      if (response.ok) {
-        setRefreshList((prev) => !prev);
-        reset();
-        onClose();
-      } else {
-        const errText = await response.text();
-        console.error("Failed to submit category", errText);
-        setGeneralError("Failed to save category. Please try again.");
+        if (response.ok) {
+          setRefreshList((prev) => !prev);
+          reset();
+          onClose();
+        } else {
+          const errText = await response.text();
+          let errorMessage = "Failed to save category. Please try again.";
+          try {
+            const errJson = JSON.parse(errText);
+            errorMessage = errJson.message || errJson.error || errJson.data?.message || errorMessage;
+          } catch (_) {}
+          setGeneralError(errorMessage);
+        }
       }
     } catch (error: any) {
       console.error("Error submitting category:", error);
