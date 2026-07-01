@@ -1,37 +1,56 @@
 import React, { useState } from "react";
-import { ICategoryListServer } from "../types";
 import { StatusBadge } from "./StatusBadge";
 import { FaEye, FaEdit, FaTrashAlt, FaFolderOpen, FaPlus } from "react-icons/fa";
 import moment from "moment";
 
-interface CategoryTableProps {
-  categories: ICategoryListServer[];
+export interface ISubCategoryListServer {
+  _id: string;
+  media: string;
+  name: string;
+  categoryId: string;
+  productCategoryId: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  isActive?: boolean;
+  categoryDetails?: {
+    _id: string;
+    media: string;
+    name: string;
+  };
+  productCategoryDetails?: {
+    _id: string;
+    media: string;
+    name: string;
+    categoryId: string;
+  };
+}
+
+interface SubCategoryTableProps {
+  subCategories: ISubCategoryListServer[];
   isLoading: boolean;
   onView: (imageUrl: string) => void;
-  onEdit: (category: ICategoryListServer) => void;
-  onDelete: (category: ICategoryListServer) => void;
-  onManageProductCategories: (category: ICategoryListServer) => void;
+  onEdit: (subCategory: ISubCategoryListServer) => void;
+  onDelete: (subCategory: ISubCategoryListServer) => void;
   onCreateTrigger?: () => void;
 }
 
-export const CategoryTable: React.FC<CategoryTableProps> = ({
-  categories,
+export const SubCategoryTable: React.FC<SubCategoryTableProps> = ({
+  subCategories,
   isLoading,
   onView,
   onEdit,
   onDelete,
-  onManageProductCategories,
   onCreateTrigger,
 }) => {
   // Local Pagination
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 8;
 
-  const totalPages = Math.ceil(categories.length / itemsPerPage) || 1;
+  const totalPages = Math.ceil(subCategories.length / itemsPerPage) || 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedCategories = categories.slice(startIndex, startIndex + itemsPerPage);
-
-
+  const paginatedCategories = subCategories.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -46,11 +65,12 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
           <table className="min-w-full divide-y divide-slate-100">
             <thead className="bg-slate-50/75 text-slate-500 font-semibold text-xs uppercase tracking-wider">
               <tr>
-                <th className="py-4 px-6 text-left">Category Image</th>
-                <th className="py-4 px-6 text-left">Category Name</th>
+                <th className="py-4 px-6 text-left">Image</th>
+                <th className="py-4 px-6 text-left">Name</th>
+                <th className="py-4 px-6 text-left">Parent Category</th>
+                <th className="py-4 px-6 text-left">Parent Sub Category</th>
                 <th className="py-4 px-6 text-left">Description</th>
                 <th className="py-4 px-6 text-left">Status</th>
-                <th className="py-4 px-6 text-left">Products Count</th>
                 <th className="py-4 px-6 text-left">Created Date</th>
                 <th className="py-4 px-6 text-right">Actions</th>
               </tr>
@@ -65,13 +85,16 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
                     <div className="h-4 bg-slate-100 rounded w-28" />
                   </td>
                   <td className="py-4 px-6">
+                    <div className="h-4 bg-slate-100 rounded w-28" />
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="h-4 bg-slate-100 rounded w-28" />
+                  </td>
+                  <td className="py-4 px-6">
                     <div className="h-4 bg-slate-100 rounded w-48" />
                   </td>
                   <td className="py-4 px-6">
                     <div className="h-6 bg-slate-100 rounded-full w-16" />
-                  </td>
-                  <td className="py-4 px-6">
-                    <div className="h-4 bg-slate-100 rounded w-12" />
                   </td>
                   <td className="py-4 px-6">
                     <div className="h-4 bg-slate-100 rounded w-20" />
@@ -92,15 +115,15 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
     );
   }
 
-  if (categories.length === 0) {
+  if (subCategories.length === 0) {
     return (
       <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center shadow-sm flex flex-col items-center justify-center">
         <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 mb-4 border border-slate-100/50">
           <FaFolderOpen size={40} className="text-slate-300" />
         </div>
-        <h3 className="text-lg font-bold text-slate-800">No Categories Found</h3>
+        <h3 className="text-lg font-bold text-slate-800">No Product Sub Categories Found</h3>
         <p className="text-slate-400 text-sm mt-1 max-w-sm leading-relaxed">
-          Create category items to structure your products, manage promotions, and organize the store catalogue.
+          Create product sub categories to complete your product classification tree.
         </p>
         {onCreateTrigger && (
           <button
@@ -108,7 +131,7 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
             className="mt-5 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-all shadow-md shadow-blue-500/10 flex items-center gap-2"
           >
             <FaPlus size={12} />
-            Create Category
+            Create Product Sub Category
           </button>
         )}
       </div>
@@ -117,47 +140,48 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm flex flex-col">
-      {/* Table Container */}
       <div className="min-w-full overflow-x-auto flex-1">
         <table className="min-w-full divide-y divide-slate-100 text-sm">
           <thead className="bg-slate-50/75 text-slate-500 font-semibold text-xs uppercase tracking-wider">
             <tr>
-              <th className="py-4 px-6 text-left">Category Image</th>
-              <th className="py-4 px-6 text-left">Category Name</th>
+              <th className="py-4 px-6 text-left">Image</th>
+              <th className="py-4 px-6 text-left">Name</th>
+              <th className="py-4 px-6 text-left">Parent Category</th>
+              <th className="py-4 px-6 text-left">Parent Sub Category</th>
               <th className="py-4 px-6 text-left">Description</th>
               <th className="py-4 px-6 text-left">Status</th>
-              <th className="py-4 px-6 text-left">Sub Categories</th>
-              <th className="py-4 px-6 text-left">Product Sub Categories</th>
               <th className="py-4 px-6 text-left">Created Date</th>
               <th className="py-4 px-6 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white text-slate-600">
-            {paginatedCategories.map((cat) => {
-              const isActive = (cat as any).isActive !== false;
+            {paginatedCategories.map((sc) => {
+              const isActive = sc.isActive !== false;
+              const parentCatName = sc.categoryDetails?.name || "N/A";
+              const parentProdCatName = sc.productCategoryDetails?.name || "N/A";
               return (
                 <tr
-                  key={cat._id}
+                  key={sc._id}
                   className="hover:bg-slate-50/40 transition-colors group"
                 >
-                  {/* Category Image */}
+                  {/* Image */}
                   <td className="py-3 px-6 whitespace-nowrap">
                     <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex items-center justify-center flex-shrink-0 group-hover:shadow-sm transition-all">
-                      {cat.media ? (
+                      {sc.media ? (
                         <img
-                          src={cat.media}
-                          alt={cat.name}
+                          src={sc.media}
+                          alt={sc.name}
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
                       ) : (
                         <div className="text-slate-300 font-semibold text-sm">
-                          {cat.name.substring(0, 2).toUpperCase()}
+                          {sc.name.substring(0, 2).toUpperCase()}
                         </div>
                       )}
-                      {cat.media && (
+                      {sc.media && (
                         <button
                           type="button"
-                          onClick={() => onView(cat.media)}
+                          onClick={() => onView(sc.media)}
                           className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white"
                           title="View Larger"
                         >
@@ -167,20 +191,30 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
                     </div>
                   </td>
 
-                  {/* Category Name */}
+                  {/* Name */}
                   <td className="py-3 px-6 whitespace-nowrap">
                     <div className="font-bold text-slate-800 text-sm group-hover:text-blue-600 transition-colors">
-                      {cat.name}
+                      {sc.name}
                     </div>
                     <div className="text-xs text-slate-400 font-medium mt-0.5">
-                      ID: {cat._id.substring(0, 8)}...
+                      ID: {sc._id.substring(0, 8)}...
                     </div>
+                  </td>
+
+                  {/* Parent Category */}
+                  <td className="py-3 px-6 whitespace-nowrap text-slate-600 font-medium">
+                    {parentCatName}
+                  </td>
+
+                  {/* Parent Sub Category */}
+                  <td className="py-3 px-6 whitespace-nowrap text-slate-600 font-medium">
+                    {parentProdCatName}
                   </td>
 
                   {/* Description */}
                   <td className="py-3 px-6 max-w-xs">
                     <div className="text-slate-500 font-medium truncate text-sm">
-                      {cat.description || <span className="text-slate-300 italic">No description provided</span>}
+                      {sc.description || <span className="text-slate-300 italic">No description provided</span>}
                     </div>
                   </td>
 
@@ -189,51 +223,18 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
                     <StatusBadge active={isActive} />
                   </td>
 
-                  {/* Sub Categories Count */}
-                  <td className="py-3 px-6 whitespace-nowrap">
-                    <button
-                      onClick={() => onManageProductCategories(cat)}
-                      className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100/50 hover:bg-emerald-100 active:bg-emerald-200 transition-all cursor-pointer"
-                      title="View Sub Categories"
-                    >
-                      {(cat as any).subCategoriesCount || 0} Sub Categories
-                    </button>
-                  </td>
-
-                  {/* Product Sub Categories Count */}
-                  <td className="py-3 px-6 whitespace-nowrap">
-                    <button
-                      onClick={() => onManageProductCategories(cat)}
-                      className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100/50 hover:bg-blue-100 active:bg-blue-200 transition-all cursor-pointer"
-                      title="View Sub Categories"
-                    >
-                      {(cat as any).productSubCategoriesCount || 0} Product Sub Categories
-                    </button>
-                  </td>
-
                   {/* Created Date */}
                   <td className="py-3 px-6 whitespace-nowrap text-slate-500 font-medium">
-                    {moment(cat.createdAt || cat.updatedAt).format("MMM DD, YYYY")}
+                    {moment(sc.createdAt || sc.updatedAt).format("MMM DD, YYYY")}
                   </td>
 
                   {/* Actions Column */}
                   <td className="py-3 px-6 whitespace-nowrap text-right">
                     <div className="inline-flex gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => onManageProductCategories(cat)}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-slate-50 rounded-xl transition-all"
-                        title="Manage Sub Categories"
-                      >
-                        <span className="flex items-center gap-1 text-xs font-semibold">
-                          <FaFolderOpen size={14} />
-                          <span className="hidden sm:inline">Sub Categories</span>
-                        </span>
-                      </button>
-                      {cat.media && (
+                      {sc.media && (
                         <button
                           type="button"
-                          onClick={() => onView(cat.media)}
+                          onClick={() => onView(sc.media)}
                           className="p-2 text-slate-400 hover:text-blue-600 hover:bg-slate-50 rounded-xl transition-all"
                           title="View Image"
                         >
@@ -242,17 +243,17 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
                       )}
                       <button
                         type="button"
-                        onClick={() => onEdit(cat)}
+                        onClick={() => onEdit(sc)}
                         className="p-2 text-slate-400 hover:text-amber-600 hover:bg-slate-50 rounded-xl transition-all"
-                        title="Edit Category"
+                        title="Edit Product Sub Category"
                       >
                         <FaEdit size={15} />
                       </button>
                       <button
                         type="button"
-                        onClick={() => onDelete(cat)}
+                        onClick={() => onDelete(sc)}
                         className="p-2 text-slate-400 hover:text-red-600 hover:bg-slate-50 rounded-xl transition-all"
-                        title="Delete Category"
+                        title="Delete Product Sub Category"
                       >
                         <FaTrashAlt size={14} />
                       </button>
@@ -271,9 +272,9 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
           <div className="text-xs text-slate-400 font-semibold">
             Showing <span className="text-slate-600">{startIndex + 1}</span> to{" "}
             <span className="text-slate-600">
-              {Math.min(startIndex + itemsPerPage, categories.length)}
+              {Math.min(startIndex + itemsPerPage, subCategories.length)}
             </span>{" "}
-            of <span className="text-slate-600">{categories.length}</span> categories
+            of <span className="text-slate-600">{subCategories.length}</span> product sub categories
           </div>
           <div className="flex items-center gap-1.5">
             <button
@@ -313,4 +314,4 @@ export const CategoryTable: React.FC<CategoryTableProps> = ({
   );
 };
 
-export default CategoryTable;
+export default SubCategoryTable;

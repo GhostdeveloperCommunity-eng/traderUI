@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 interface BreadcrumbItem {
   label: string;
   to?: string;
+  onClick?: () => void;
 }
 
 interface BreadcrumbProps {
@@ -18,14 +19,26 @@ const Breadcrumb = ({ items }: BreadcrumbProps) => {
 
           return (
             <li key={index} className="flex items-center gap-1">
-              {!isLast && item.to ? (
+              {!isLast ? (
                 <>
-                  <Link
-                    to={item.to}
-                    className="hover:text-blue-600 transition-colors"
-                  >
-                    {item.label}
-                  </Link>
+                  {item.onClick ? (
+                    <button
+                      type="button"
+                      onClick={item.onClick}
+                      className="hover:text-blue-600 transition-colors bg-transparent border-none p-0 cursor-pointer font-medium"
+                    >
+                      {item.label}
+                    </button>
+                  ) : item.to ? (
+                    <Link
+                      to={item.to}
+                      className="hover:text-blue-600 transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <span className="text-gray-500">{item.label}</span>
+                  )}
                   <span className="text-gray-400">{">"}</span>
                 </>
               ) : (

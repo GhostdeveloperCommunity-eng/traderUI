@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { ICategoryListServer } from "../types";
+import { IProductCategoryListServer } from "./ProductCategoryTable";
 import { ImageUpload } from "./ImageUpload";
+import { SearchableDropdown, DropdownOption } from "./SearchableDropdown";
 import { getCompleteUrlV1, uploadImage } from "../utils";
 import { httpClient } from "../services/ApiService";
 import { FaTimes } from "react-icons/fa";
@@ -11,24 +12,28 @@ interface FormValues {
   description: string;
   imageFile: File | string | null;
   isActive: boolean;
+  categoryId: string;
 }
 
-interface CategoryModalProps {
+interface ProductCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   setRefreshList: React.Dispatch<React.SetStateAction<boolean>>;
-  editingCategory: ICategoryListServer | null;
+  editingProductCategory: IProductCategoryListServer | null;
+  defaultCategoryId?: string;
 }
 
-export const CategoryModal: React.FC<CategoryModalProps> = ({
+export const ProductCategoryModal: React.FC<ProductCategoryModalProps> = ({
   isOpen,
   onClose,
   setRefreshList,
-  editingCategory,
+  editingProductCategory,
+  defaultCategoryId = "",
 }) => {
-  const isEdit = !!editingCategory;
+  const isEdit = !!editingProductCategory;
   const [loader, setLoader] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<string | null>(null);
+  const [categoryOptions, setCategoryOptions] = useState<DropdownOption[]>([]);
 
   const {
     register,
@@ -45,19 +50,42 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
       description: "",
       imageFile: null,
       isActive: true,
+      categoryId: "",
     },
   });
 
-  // Pre-fill form if editingCategory prop is provided
+  // Fetch Parent Categories for SearchableDropdown
   useEffect(() => {
     if (!isOpen) return;
 
-    if (editingCategory) {
+    (async function getCategories() {
+      try {
+        const res = await httpClient.get(getCompleteUrlV1("category/names"));
+        if (res.ok) {
+          const payload = await res.json();
+          const list = payload.data || [];
+          setCategoryOptions(
+            list.map((c: any) => ({
+              label: c.name,
+              value: c._id,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Error loading categories for dropdown:", error);
+      }
+    })();
+  }, [isOpen]);
+
+  // Pre-fill form if editing or if default category id is provided
+  useEffect(() => {
+    if (editingProductCategory) {
       reset({
-        name: editingCategory.name || "",
-        description: editingCategory.description || "",
-        imageFile: editingCategory.media || null,
-        isActive: (editingCategory as any).isActive !== false,
+        name: editingProductCategory.name || "",
+        description: editingProductCategory.description || "",
+        imageFile: editingProductCategory.media || null,
+        isActive: editingProductCategory.isActive !== false,
+        categoryId: editingProductCategory.categoryId || defaultCategoryId,
       });
     } else {
       reset({
@@ -65,15 +93,17 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
         description: "",
         imageFile: null,
         isActive: true,
+        categoryId: defaultCategoryId,
       });
     }
-  }, [editingCategory, isOpen, reset]);
+  }, [editingProductCategory, defaultCategoryId, reset, isOpen]);
 
   const nameVal = watch("name");
   const imageVal = watch("imageFile");
+  const categoryIdVal = watch("categoryId");
   const descriptionVal = watch("description") || "";
 
-  const isSubmitDisabled = !nameVal || !imageVal || loader;
+  const isSubmitDisabled = !nameVal || !imageVal || !categoryIdVal || loader;
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -91,59 +121,76 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
       }
 
       if (!imageUrl) {
-        throw new Error("Category image is required.");
+        throw new Error("Image is required to proceed.");
       }
 
       const trimmedName = data.name.trim();
       const trimmedDescription = data.description?.trim() || "";
 
       if (!trimmedName) {
-        throw new Error("Category name is required.");
+        throw new Error("Sub Category name is required.");
       }
 
       let response;
-      if (isEdit && editingCategory) {
+      if (isEdit && editingProductCategory) {
         const payload = {
-          id: editingCategory._id,
+          id: editingProductCategory._id,
           name: trimmedName,
           description: trimmedDescription,
           media: imageUrl,
           isActive: data.isActive,
+          categoryId: data.categoryId,
         };
 
         response = await httpClient.put(
-          getCompleteUrlV1("category"),
+          getCompleteUrlV1("category/product-category"),
           payload
         );
+
+        const resText = await response.text();
+
+        if (response.ok) {
+          setRefreshList((prev) => !prev);
+          reset();
+          onClose();
+        } else {
+          let errorMessage = "Failed to save sub category. Please try again.";
+          try {
+            const errJson = JSON.parse(resText);
+            errorMessage = errJson.message || errJson.error || errJson.data?.message || errorMessage;
+          } catch (_) {}
+          setGeneralError(errorMessage);
+        }
       } else {
         const payload = {
           name: trimmedName,
           description: trimmedDescription,
           media: imageUrl,
           isActive: data.isActive,
+          categoryId: data.categoryId,
         };
 
         response = await httpClient.post(
-          getCompleteUrlV1("category"),
+          getCompleteUrlV1("category/product-category"),
           payload
         );
-      }
 
-      if (response.ok) {
-        setRefreshList((prev) => !prev);
-        reset();
-        onClose();
-      } else {
-        const errText = await response.text();
-        let errorMessage = "Failed to save category. Please try again.";
-        try {
-          const errJson = JSON.parse(errText);
-          errorMessage = errJson.message || errJson.error || errJson.data?.message || errorMessage;
-        } catch (_) {}
-        setGeneralError(errorMessage);
+        if (response.ok) {
+          setRefreshList((prev) => !prev);
+          reset();
+          onClose();
+        } else {
+          const errText = await response.text();
+          let errorMessage = "Failed to save sub category. Please try again.";
+          try {
+            const errJson = JSON.parse(errText);
+            errorMessage = errJson.message || errJson.error || errJson.data?.message || errorMessage;
+          } catch (_) {}
+          setGeneralError(errorMessage);
+        }
       }
     } catch (error: any) {
-      console.error("Error submitting category:", error);
+      console.error("Error submitting sub category:", error);
       setGeneralError(error?.message || "An unexpected error occurred.");
     } finally {
       setLoader(false);
@@ -166,12 +213,12 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
         <div className="flex justify-between items-center px-6 py-4 border-b border-slate-100 bg-slate-50/50">
           <div>
             <h2 className="text-lg font-bold text-slate-800">
-              {isEdit ? "Edit Category" : "Create New Category"}
+              {isEdit ? "Edit Sub Category" : "Create New Sub Category"}
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
               {isEdit
-                ? "Update category settings and details"
-                : "Add a brand new category to the database"}
+                ? "Update sub category settings and details"
+                : "Add a brand new sub category to the hierarchy"}
             </p>
           </div>
           <button
@@ -194,16 +241,34 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             </div>
           )}
 
-          {/* Category Name */}
+          {/* Parent Category Searchable Dropdown */}
+          <Controller
+            name="categoryId"
+            control={control}
+            rules={{ required: "Parent category is required" }}
+            render={({ field, fieldState }) => (
+              <SearchableDropdown
+                label="Parent Category *"
+                placeholder="Search & select category..."
+                options={categoryOptions}
+                value={field.value}
+                onChange={(val) => setValue("categoryId", val, { shouldValidate: true })}
+                error={fieldState.error?.message}
+                disabled={!!defaultCategoryId} // Lock if opened within specific Category view
+              />
+            )}
+          />
+
+          {/* Sub Category Name */}
           <div className="space-y-1.5">
             <label className="block text-sm font-semibold text-slate-700">
-              Category Name <span className="text-red-500">*</span>
+              Sub Category Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              placeholder="e.g. Electronics"
+              placeholder="e.g. Mobiles"
               {...register("name", {
-                required: "Category name is required",
+                required: "Sub category name is required",
                 minLength: { value: 2, message: "Name must be at least 2 characters" },
               })}
               className={`w-full px-4 py-2.5 rounded-xl border text-slate-800 text-sm placeholder:text-slate-400 bg-slate-50/50 focus:outline-none focus:ring-2 transition-all ${
@@ -230,7 +295,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
               </span>
             </div>
             <textarea
-              placeholder="Write a brief overview of what this category represents..."
+              placeholder="Write a brief overview of what this sub category represents..."
               rows={4}
               maxLength={500}
               {...register("description")}
@@ -238,11 +303,11 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             />
           </div>
 
-          {/* Image Upload */}
+          {/* Custom ImageUpload Component Integration */}
           <Controller
             name="imageFile"
             control={control}
-            rules={{ required: !isEdit && "Category image is required" }}
+            rules={{ required: !isEdit && "Sub category image is required" }}
             render={({ field, fieldState }) => (
               <ImageUpload
                 value={field.value}
@@ -260,7 +325,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                 Status Toggle
               </label>
               <p className="text-xs text-slate-400 mt-0.5">
-                Determine if this category is active
+                Determine if this sub category is active
               </p>
             </div>
             <Controller
@@ -328,7 +393,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             ) : isEdit ? (
               "Save Changes"
             ) : (
-              "Create Category"
+              "Create Sub Category"
             )}
           </button>
         </div>
@@ -336,5 +401,3 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
     </div>
   );
 };
-
-export default CategoryModal;

@@ -48,7 +48,6 @@ export const Approvals = () => {
   const [requests, setRequests] = useState<SellerRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
-  const [actionType, setActionType] = useState<RequestType | null>(null);
 
   // Search and local filters state
   const [searchQuery, setSearchQuery] = useState("");
@@ -212,7 +211,7 @@ export const Approvals = () => {
         businessName.includes(query)
       );
     })
-    .sort((a, b) => {
+    .sort((_a, _b) => {
       // Simple sort mock
       return sortOrder === "newest" ? 1 : -1;
     });
@@ -438,7 +437,6 @@ export const Approvals = () => {
                       req={req}
                       handleAction={(value) => {
                         setSelectedRequest(value);
-                        setActionType("accept");
                       }}
                       onViewDetails={(r) => setActiveDetail(r)}
                     />
