@@ -1,137 +1,295 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getCompleteUrlV1 } from "../utils";
 import { httpClient } from "../services/ApiService";
 import { ICategoryServer } from "../types";
 import { Button } from "../components/Button";
-import { Modal } from "../components/ImageModal";
 import { CreateMasterProductModal } from "../components/CreateMasterProductModal";
+import { ConfirmDeleteModal } from "../components/ConfirmDeleteModal";
+import { hasPermission } from "../utils/permission";
 import DebounceSearch from "../components/DebounceSearch";
 import Breadcrumb from "../components/Breadcrumb";
 import CardSkeleton from "../components/CardSkeleton";
+import { FaEdit, FaTrashAlt, FaEye, FaPlus } from "react-icons/fa";
 
 export const MasterProductList = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<ICategoryServer[]>([]);
   const [openCreateMaster, setOpenCreateMaster] = useState<boolean>(false);
-  const [filteredProducts, setFilteredProducts] = useState<ICategoryServer[]>(
-    [],
-  );
+  const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [deletingProduct, setDeletingProduct] = useState<any>(null);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
+  const [filteredProducts, setFilteredProducts] = useState<ICategoryServer[]>([]);
   const [isloading, setIsLoading] = useState<boolean>(true);
   const [refreshList, setRefreshList] = useState<boolean>(false);
+
+  const canView = hasPermission("Master.View");
+  const canEdit = hasPermission("Master.Edit");
+
   useEffect(() => {
     (async function getMatserProduct() {
-      setIsLoading(true);
-      const master = await httpClient.get(getCompleteUrlV1("master"));
-      const products = await master.json();
-      setProducts(products.data);
-      setFilteredProducts(products.data);
-      setIsLoading(false);
+      try {
+        setIsLoading(true);
+        const master = await httpClient.get(getCompleteUrlV1("master"));
+        if (master.ok) {
+          const resPayload = await master.json();
+          setProducts(resPayload.data || []);
+          setFilteredProducts(resPayload.data || []);
+        }
+      } catch (err) {
+        console.error("Error loading products:", err);
+      } finally {
+        setIsLoading(false);
+      }
     })();
   }, [refreshList]);
 
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  // Handle status toggle (active/inactive)
+  const handleToggleStatus = async (product: ICategoryServer) => {
+    if (!canEdit) return;
+    try {
+      const newActiveState = product.active === false;
+      const payload = {
+        id: product._id,
+        name: product.name,
+        brand: product.brand,
+        categoryId: product.categoryId,
+        productCategoryId: (product as any).productCategoryId || null,
+        subCategoryId: (product as any).subCategoryId || null,
+        skuCode: product.skuCode,
+        mrp: product.categoryDetails?.mrp ? Number(product.categoryDetails.mrp) : 0,
+        size: product.size,
+        active: newActiveState,
+        media: product.media || [],
+      };
 
-  const openImage = (imageUrl: string) => setSelectedImage(imageUrl);
-  const closeImage = () => setSelectedImage(null);
+      let res = await httpClient.put(getCompleteUrlV1("master"), payload);
+      if (!res.ok) {
+        res = await httpClient.put(
+          getCompleteUrlV1(`master/${product._id}`),
+          payload
+        );
+      }
+
+      if (res.ok) {
+        setRefreshList((prev) => !prev);
+      } else {
+        alert("Failed to update status.");
+      }
+    } catch (err) {
+      console.error("Error updating status:", err);
+    }
+  };
+
+  // Handle delete confirmation
+  const handleDeleteConfirm = async () => {
+    if (!deletingProduct) return;
+    try {
+      setIsDeleting(true);
+      const res = await httpClient.delete(getCompleteUrlV1(`master/${deletingProduct._id}`));
+      if (res.ok) {
+        setRefreshList((prev) => !prev);
+      } else {
+        alert("Failed to delete master product.");
+      }
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      alert("An error occurred during deletion.");
+    } finally {
+      setIsDeleting(false);
+      setDeletingProduct(null);
+    }
+  };
 
   return (
-    <div className="p-4">
-      <div className="bg-white shadow-md rounded-lg overflow-hidden p-4">
-        <Breadcrumb
-          items={[
-            { label: "Dashboard", to: "/dashboard" },
-            { label: "Master Product", to: "/master-product-list" },
-          ]}
-        />
-        <div className="flex items-center justify-between mb-4">
-          <DebounceSearch
-            products={products}
-            setSearchProduct={setFilteredProducts}
-            placeholder="Search Products..."
+    <div className="space-y-6">
+      {/* Navigation & Title Banner */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <Breadcrumb
+            items={[
+              { label: "Dashboard", to: "/dashboard" },
+              { label: "Master Product List", to: "/master-product-list" },
+            ]}
           />
-
-          <Button color="success" onClick={() => setOpenCreateMaster(true)}>
-            Create Product
-          </Button>
+          <h1 className="text-2xl font-bold text-slate-800 tracking-tight mt-1">
+            Master Product Management
+          </h1>
+          <p className="text-sm text-slate-400 font-medium">
+            Create, manage and organize core master product variants.
+          </p>
         </div>
 
-        <table className="min-w-full text-sm font-light border-collapse">
-          <thead className="bg-blue-800 text-white">
-            <tr className="uppercase text-sm leading-normal">
-              <th className="py-3 px-6 text-left">Product Name</th>
-              <th className="py-3 px-6 text-left">SKU Code</th>
-              <th className="py-3 px-6 text-left">Brand</th>
-              <th className="py-3 px-6 text-left">Category Name</th>
-              <th className="py-3 px-6 text-left">Size(s)</th>
-              <th className="py-3 px-6 text-center">Image</th>
-            </tr>
-          </thead>
-          {isloading ? (
-            <>
-              <CardSkeleton />
-            </>
-          ) : (
-            <tbody className="text-gray-600 text-sm font-light">
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map(
-                  ({
-                    _id,
-                    skuCode,
-                    brand,
-                    size,
-                    media,
-                    name,
-                    categoryDetails,
-                  }) => (
-                    <tr
-                      key={_id}
-                      className="border-b border-gray-200 hover:bg-gray-100"
-                    >
-                      <td className="py-3 px-6 text-left">{name}</td>
-                      <td className="py-3 px-6 text-left">{skuCode}</td>
-                      <td className="py-3 px-6 text-left">{brand}</td>
-                      <td className="py-3 px-6 text-left">
-                        {categoryDetails?.name}
-                      </td>
-                      <td className="py-3 px-6 text-left">{size}</td>
-                      <td className="py-2 px-2 text-center">
-                        <Button
-                          className="inline-block bg-purple-500 text-purple-100 px-3 py-1 rounded-md hover:bg-purple-400 transition"
-                          onClick={() =>
-                            media && media.length && openImage(media[0])
-                          }
-                        >
-                          View
-                        </Button>
-                      </td>
-                    </tr>
-                  ),
-                )
-              ) : (
-                <tr>
-                  <td colSpan={6} className="text-center py-4">
-                    No products found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          )}
-        </table>
+        {canEdit && (
+          <button
+            onClick={() => {
+              setEditingProduct(null);
+              setOpenCreateMaster(true);
+            }}
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold rounded-xl transition-all shadow-md shadow-blue-500/10 flex items-center gap-2 cursor-pointer"
+          >
+            <FaPlus size={12} />
+            Create Product
+          </button>
+        )}
       </div>
 
-      {selectedImage && (
-        <Modal onClose={closeImage}>
-          <img
-            src={selectedImage}
-            alt="Product"
-            className="max-w-full max-h-[60vh] object-contain rounded-lg"
-          />
-        </Modal>
-      )}
-      {openCreateMaster && (
+      {/* Main Listing Card */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-5">
+        {/* Search Toolbar */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="relative flex-1 max-w-md">
+            <DebounceSearch
+              products={products}
+              setSearchProduct={setFilteredProducts}
+              placeholder="Search Products..."
+            />
+          </div>
+        </div>
+
+        {/* Table View */}
+        <div className="overflow-x-auto rounded-xl border border-slate-100 bg-white">
+          <table className="min-w-full divide-y divide-slate-100 text-sm">
+            <thead className="bg-slate-55/60 text-slate-500 font-semibold">
+              <tr className="text-xs uppercase tracking-wider text-left">
+                <th className="py-4 px-6">Product Name</th>
+                <th className="py-4 px-6">SKU Code</th>
+                <th className="py-4 px-6">Brand</th>
+                <th className="py-4 px-6">Category Name</th>
+                <th className="py-4 px-6">Size(s)</th>
+                <th className="py-4 px-6 text-center">Status</th>
+                <th className="py-4 px-6 text-right">Actions</th>
+              </tr>
+            </thead>
+            {isloading ? (
+              <tbody>
+                <tr>
+                  <td colSpan={7} className="py-6">
+                    <CardSkeleton />
+                  </td>
+                </tr>
+              </tbody>
+            ) : (
+              <tbody className="divide-y divide-slate-100 text-slate-700">
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map((p) => {
+                    const isActive = p.active !== false;
+                    return (
+                      <tr
+                        key={p._id}
+                        className="hover:bg-slate-50/50 transition-colors duration-150 cursor-pointer"
+                        onClick={() => canView && navigate(`/master-product/${p._id}`)}
+                      >
+                        <td className="py-4 px-6 font-semibold text-slate-800">{p.name}</td>
+                        <td className="py-4 px-6 font-mono text-xs">{p.skuCode}</td>
+                        <td className="py-4 px-6">{p.brand || "—"}</td>
+                        <td className="py-4 px-6">{p.categoryDetails?.name || "—"}</td>
+                        <td className="py-4 px-6 font-medium">{p.size || "—"}</td>
+                        <td className="py-4 px-6 text-center" onClick={(e) => e.stopPropagation()}>
+                          {canEdit ? (
+                            <button
+                              type="button"
+                              onClick={() => handleToggleStatus(p)}
+                              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                isActive ? "bg-emerald-500" : "bg-slate-200"
+                              }`}
+                              title={isActive ? "Deactivate product" : "Activate product"}
+                            >
+                              <span
+                                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                  isActive ? "translate-x-5" : "translate-x-0"
+                                }`}
+                              />
+                            </button>
+                          ) : (
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-2xs font-bold ${
+                                isActive
+                                  ? "bg-emerald-50 text-emerald-600"
+                                  : "bg-slate-100 text-slate-400"
+                              }`}
+                            >
+                              {isActive ? "Active" : "Inactive"}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-4 px-6 text-right" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-end gap-2.5">
+                            {canView && (
+                              <button
+                                onClick={() => navigate(`/master-product/${p._id}`)}
+                                className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all cursor-pointer"
+                                title="View Details"
+                              >
+                                <FaEye size={14} />
+                              </button>
+                            )}
+
+                            {canEdit && (
+                              <button
+                                onClick={() => {
+                                  setEditingProduct(p);
+                                  setOpenCreateMaster(true);
+                                }}
+                                className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-all cursor-pointer"
+                                title="Edit Product"
+                              >
+                                <FaEdit size={14} />
+                              </button>
+                            )}
+
+                            {canEdit && (
+                              <button
+                                onClick={() => setDeletingProduct(p)}
+                                className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all cursor-pointer"
+                                title="Delete Product"
+                              >
+                                <FaTrashAlt size={13} />
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan={7} className="text-center py-10 text-slate-400 italic">
+                      No master products found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            )}
+          </table>
+        </div>
+      </div>
+
+      {/* Delete Confirmation Overlay */}
+      <ConfirmDeleteModal
+        isOpen={!!deletingProduct}
+        title="Delete Master Product"
+        message={
+          deletingProduct
+            ? `Are you sure you want to delete the product "${deletingProduct.name}"? This action cannot be undone.`
+            : ""
+        }
+        isDeleting={isDeleting}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeletingProduct(null)}
+      />
+
+      {/* Create / Edit Form Modal */}
+      {(openCreateMaster || !!editingProduct) && (
         <CreateMasterProductModal
-          isOpen={openCreateMaster}
-          onClose={() => setOpenCreateMaster(false)}
+          isOpen={openCreateMaster || !!editingProduct}
+          onClose={() => {
+            setOpenCreateMaster(false);
+            setEditingProduct(null);
+          }}
           setRefreshList={setRefreshList}
+          editingProduct={editingProduct}
         />
       )}
     </div>

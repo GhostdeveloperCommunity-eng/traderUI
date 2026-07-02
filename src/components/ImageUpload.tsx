@@ -6,6 +6,7 @@ interface ImageUploadProps {
   onChange: (file: File) => void;
   onClear: () => void;
   error?: string;
+  label?: string;
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -13,6 +14,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   onChange,
   onClear,
   error,
+  label,
 }) => {
   const [isDragActive, setIsDragActive] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -63,7 +65,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   return (
     <div className="space-y-2">
       <label className="block text-sm font-semibold text-slate-700">
-        Category Image
+        {label || "Category Image"}
       </label>
 
       {previewUrl ? (

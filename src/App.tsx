@@ -1,5 +1,6 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { MasterProductList } from "./pages/masterProductList";
+import { MasterProductDetails } from "./pages/masterProductDetails";
 import { LoginPage } from "./pages/Login";
 import { ProtectRoute } from "./components/ProtectRoutes";
 import { LotList } from "./pages/LotsList";
@@ -61,6 +62,15 @@ const App = () => (
           element={
             <ProtectRoute>
               <MasterProductList />
+            </ProtectRoute>
+          }
+        />
+
+        <Route
+          path="/master-product/:id"
+          element={
+            <ProtectRoute>
+              <MasterProductDetails />
             </ProtectRoute>
           }
         />

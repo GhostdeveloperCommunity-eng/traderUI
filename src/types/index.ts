@@ -22,9 +22,11 @@ interface IMasterProduct {
   name: string;
   brand: string;
   categoryId: string;
+  productCategoryId?: string;
+  subCategoryId?: string;
   skuCode: string;
-  subCategory: string;
-  productSubCategory: string;
+  subCategory?: string;
+  productSubCategory?: string;
   mrp: string;
   size: string;
   images: File[] | null;
