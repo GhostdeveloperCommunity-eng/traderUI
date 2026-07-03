@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { getCompleteUrlV1 } from "../utils";
 import { httpClient } from "../services/ApiService";
 import { ICategoryServer } from "../types";
-import { Button } from "../components/Button";
 import { CreateMasterProductModal } from "../components/CreateMasterProductModal";
 import { ConfirmDeleteModal } from "../components/ConfirmDeleteModal";
 import { hasPermission } from "../utils/permission";

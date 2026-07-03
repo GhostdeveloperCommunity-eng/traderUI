@@ -4,7 +4,6 @@ import { getCompleteUrlV1 } from "../utils";
 import { httpClient } from "../services/ApiService";
 import { hasPermission } from "../utils/permission";
 import Breadcrumb from "../components/Breadcrumb";
-import { Button } from "../components/Button";
 import { ConfirmDeleteModal } from "../components/ConfirmDeleteModal";
 import { CreateMasterProductModal } from "../components/CreateMasterProductModal";
 import {

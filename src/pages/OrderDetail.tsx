@@ -7,7 +7,6 @@ import { capitalize } from "../utils/utils";
 import StatusTag from "../utils/StatusTag";
 import { Order } from "../types";
 import Breadcrumb from "../components/Breadcrumb";
-import CardSkeleton from "../components/CardSkeleton";
 import OrderStatusTag from "../utils/OrderStatusTag";
 import {
   FaArrowLeft,
@@ -21,7 +20,6 @@ import {
   FaBoxOpen,
   FaInfoCircle,
   FaPhoneAlt,
-  FaEnvelope,
   FaStore,
   FaCheck,
   FaTimes,
@@ -122,8 +120,6 @@ export const OrderDetail = () => {
       </div>
     );
   }
-
-  const isOrderActive = order.status !== 3 && order.status !== 2;
 
   // B2B Commissions Calculations
   const totalPromoterCommission = order.order_items.reduce(

@@ -40,7 +40,7 @@ export const OrderList = () => {
   const [endDate, setEndDate] = useState(moment().endOf("day").toISOString());
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [paymentFilter, setPaymentFilter] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+
 
   // Checkbox selection for bulk actions
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
@@ -99,7 +99,6 @@ export const OrderList = () => {
     setEndDate(moment().endOf("day").toISOString());
     setStatusFilter("all");
     setPaymentFilter("all");
-    setSearchQuery("");
   };
 
   // Checkbox handlers

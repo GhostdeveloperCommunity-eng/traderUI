@@ -44,13 +44,15 @@ export const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const selectedOption = options.find((opt) => opt.value === value);
+  const selectedOption = (options || []).find((opt) => opt && opt.value === value);
 
   // Filter options locally if no custom search is defined
   const filteredOptions = onSearchChange
-    ? options
-    : options.filter((opt) =>
-        opt.label.toLowerCase().includes(searchQuery.toLowerCase())
+    ? (options || [])
+    : (options || []).filter((opt) =>
+        opt && 
+        typeof opt.label === "string" && 
+        opt.label.toLowerCase().includes((searchQuery || "").toLowerCase())
       );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

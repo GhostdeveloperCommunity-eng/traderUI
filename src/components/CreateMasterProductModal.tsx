@@ -424,7 +424,7 @@ export function CreateMasterProductModal({
                       categoryIdVal ? "Search & select sub category..." : "Please select category first"
                     }
                     options={productCategoryOptions}
-                    value={field.value}
+                    value={field.value || ""}
                     onChange={(val) => {
                       setValue("productCategoryId", val, { shouldValidate: true });
                     }}
@@ -446,7 +446,7 @@ export function CreateMasterProductModal({
                         : "Please select sub category first"
                     }
                     options={subCategoryOptions}
-                    value={field.value}
+                    value={field.value || ""}
                     onChange={(val) => {
                       setValue("subCategoryId", val, { shouldValidate: true });
                     }}

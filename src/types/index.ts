@@ -220,3 +220,31 @@ export type TopAffiliateType = {
   affiliateId: string;
   volume: number;
 };
+
+export interface IBannerMetadata {
+  title: string;
+  position: string;
+  platform: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  createdBy: string;
+  updatedBy?: string;
+  createdAt?: string;
+  updatedAt: string;
+  views: number;
+  clicks: number;
+  ctr: string | number;
+  priority?: string;
+  description?: string;
+}
+
+export interface IBannerItem {
+  _id: string;
+  media: string;
+  contentType: string;
+  contentId: string;
+  contentName: string;
+  metadata: IBannerMetadata;
+}
+
